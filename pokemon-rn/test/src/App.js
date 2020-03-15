@@ -1,15 +1,17 @@
-import React from 'react';
-import axios from 'axios';
-import './App.css';
+import React from "react";
+import axios from "axios";
+import "./App.css";
 
-const api = async() => {
-  const resp = await axios.get("https://localhost3001/pokemons/pokedex")
-}
+const api = async () => {
+  console.log("WHAAAAT");
+  const resp = await axios.get("http://localhost:3001/pokemons/pokedex");
+  console.log(resp);
+};
 
 function App() {
   return (
     <div className="App">
-      
+      <button onClick={api}>HELLO</button>
     </div>
   );
 }
