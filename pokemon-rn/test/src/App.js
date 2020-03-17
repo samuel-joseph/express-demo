@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import "./App.css";
+import { getAllPokemon, userData } from "./services/api_helper";
+import { createPortal } from "react-dom";
 
 export default class App extends Component {
   constructor(props) {
@@ -13,9 +15,10 @@ export default class App extends Component {
   }
 
   componentDidMount = async () => {
-    const resp = await axios.get("http://localhost:3001/pokemons/pokedex");
-    const pokemons = resp.data.pokemons;
+    const pokemons = await getAllPokemon();
+    const test = await userData();
 
+    console.log(test);
     this.setState({
       pokemons
     });
@@ -23,8 +26,11 @@ export default class App extends Component {
   };
 
   checkMoves = async id => {
-    console.log(id);
-    const resp
+    id++;
+    const resp = await axios.get(`http://localhost:3001/pokemons/${id}/moves`);
+    const moves = resp.data.moves;
+    this.setState({ moves });
+    console.log(this.state.moves);
   };
 
   render() {
@@ -32,8 +38,6 @@ export default class App extends Component {
       <div className="App">
         {this.state.pokemons && (
           <>
-            {console.log("HEYOOO")}
-            {console.log(this.state)}
             {this.state.pokemons.map((data, index) => (
               <div key={index} className="desc">
                 <h4>{data.name}</h4>
