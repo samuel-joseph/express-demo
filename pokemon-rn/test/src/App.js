@@ -84,12 +84,20 @@ class App extends Component {
       <div className="App">
         <div>
           <Link to="/pokemons/pokedex">Pokedex</Link>
-          <button onClick={() => this.handleLogout()}>Logout</button>
+          {!this.state.currentUser && (
+            <Link to="/users/register">Register</Link>
+          )}
+          {this.state.currentUser && (
+            <button onClick={() => this.handleLogout()}>Logout</button>
+          )}
         </div>
         {this.state.currentUser && (
           <p>Hello {this.state.currentUser.username}</p>
         )}
-        <RegisterForm handleRegister={this.handleRegister} />
+        <Route
+          path="/users/register"
+          render={() => <RegisterForm handleRegister={this.handleRegister} />}
+        />
         <Route path="/pokemons/pokedex" render={() => <Pokedex />} />
       </div>
     );
