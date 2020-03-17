@@ -8,7 +8,7 @@ export default class App extends Component {
 
     this.state = {
       pokemons: [],
-      cool: ["a", "b", "c"]
+      moves: []
     };
   }
 
@@ -22,6 +22,11 @@ export default class App extends Component {
     console.log(this.state.pokemons);
   };
 
+  checkMoves = async id => {
+    console.log(id);
+    const resp
+  };
+
   render() {
     return (
       <div className="App">
@@ -29,12 +34,13 @@ export default class App extends Component {
           <>
             {console.log("HEYOOO")}
             {console.log(this.state)}
-            {this.state.pokemons.map(data => (
-              <div className="inner">
-                <div className="desc">
-                  <h4>{data.name}</h4>
-                  <img src={data.frontImage} />
-                </div>
+            {this.state.pokemons.map((data, index) => (
+              <div key={index} className="desc">
+                <h4>{data.name}</h4>
+                <img
+                  onClick={() => this.checkMoves(index)}
+                  src={data.frontImage}
+                />
               </div>
             ))}
           </>
