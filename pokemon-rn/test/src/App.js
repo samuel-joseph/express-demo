@@ -12,6 +12,7 @@ import { Link, Route, withRouter } from "react-router-dom";
 
 import Pokedex from "./components/Pokedex";
 import RegisterForm from "./components/RegisterForm";
+import LoginForm from "./components/LoginForm";
 
 class App extends Component {
   constructor(props) {
@@ -67,6 +68,13 @@ class App extends Component {
     });
   };
 
+  handleLogin = async (e, loginData) => {
+    e.preventDefault();
+    const currentUser = await loginUser(loginData);
+    const id = currentUser.id;
+    this.setState({ currentUser, id });
+  };
+
   handleLogout = () => {
     this.setState({
       currentUser: null
@@ -87,9 +95,11 @@ class App extends Component {
           {!this.state.currentUser && (
             <Link to="/users/register">Register</Link>
           )}
+          {!this.state.currentUser && <Link to="/users/login">Login</Link>}
           {this.state.currentUser && (
             <button onClick={() => this.handleLogout()}>Logout</button>
           )}
+          
         </div>
         {this.state.currentUser && (
           <p>Hello {this.state.currentUser.username}</p>
@@ -99,6 +109,10 @@ class App extends Component {
           render={() => <RegisterForm handleRegister={this.handleRegister} />}
         />
         <Route path="/pokemons/pokedex" render={() => <Pokedex />} />
+        <Route
+          path="/users/login"
+          render={() => <LoginForm handleLogin={this.handleLogin} />}
+        />
       </div>
     );
   }
