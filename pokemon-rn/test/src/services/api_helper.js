@@ -17,12 +17,13 @@ export const loginUser = async loginData => {
 };
 
 export const registerUser = async registerData => {
-  const resp = await api.post("/signup", registerData);
-  localStorage.setItem("authToken", resp.data.auth_token);
-  api.defaults.headers.common.authorization = `Bearer ${resp.data.auth_token}`;
-  localStorage.setItem("authToken", resp.data.auth_token);
-  localStorage.setItem("name", resp.data.user.name);
-  localStorage.setItem("trainername", resp.data.user.trainername);
+  const resp = await api.post("/users/register", registerData);
+  console.log(resp.data.token);
+  localStorage.setItem("authToken", resp.data.token);
+  api.defaults.headers.common.authorization = `Bearer ${resp.data.token}`;
+  localStorage.setItem("authToken", resp.data.token);
+  localStorage.setItem("username", resp.data.user.username);
+  // localStorage.setItem("trainername", resp.data.user.trainername);
   localStorage.setItem("id", resp.data.user.id);
   console.log(resp);
   return resp.data.user;

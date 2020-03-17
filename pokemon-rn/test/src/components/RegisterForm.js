@@ -5,8 +5,7 @@ export default class RegisterForm extends Component {
     super(props);
 
     this.state = {
-      name: "",
-      trainername: "",
+      username: "",
       password: ""
     };
   }
@@ -18,32 +17,21 @@ export default class RegisterForm extends Component {
     });
   };
 
-  componentDidMount() {
-    this.props.display("Register and become a trainer!");
-  }
-
   render() {
     return (
       <div className="form">
         {this.props.errorText && <p>{this.props.errorText}</p>}
         <form onSubmit={e => this.props.handleRegister(e, this.state)}>
           <h2>Register!</h2>
-          <label htmlFor="name">name</label>
+          <label htmlFor="name">username</label>
           <input
             type="text"
-            name="name"
+            name="username"
             className="label"
-            value={this.state.name}
+            value={this.state.username}
             onChange={this.handleChange}
           />
-          <label htmlFor="trainername">Trainername</label>
-          <input
-            type="text"
-            name="trainername"
-            className="label"
-            value={this.state.trainername}
-            onChange={this.handleChange}
-          />
+
           <label htmlFor="password">password</label>
           <input
             type="password"

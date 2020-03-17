@@ -1,29 +1,39 @@
 import React, { Component } from "react";
 import axios from "axios";
 import "./App.css";
-import { getAllPokemon, userData } from "./services/api_helper";
+import {
+  getAllPokemon,
+  userData,
+  verifyUser,
+  registerUser
+} from "./services/api_helper";
 import { Link, Route, withRouter } from "react-router-dom";
 
 import Pokedex from "./components/Pokedex";
+import RegisterForm from "./components/RegisterForm";
 
 export default class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      pokemons: [],
-      moves: []
+      id: null,
+      currentUser: null
     };
   }
 
   componentDidMount = async () => {
-    const pokemons = await getAllPokemon();
-    const test = await userData();
-
-    this.setState({
-      pokemons
-    });
-    console.log(this.state.pokemons);
+    verifyUser();
+    console.log(this.state.currentUser);
+    if (localStorage.getItem("authToken")) {
+      const trainername = localStorage.getItem("username");
+      const user = { trainername };
+      console.log(user);
+      user &&
+        this.setState({
+          currentUser: user
+        });
+    }
   };
 
   // checkMoves = async id => {
@@ -36,17 +46,18 @@ export default class App extends Component {
 
   handleRegister = async (e, registerData) => {
     e.preventDefault();
+    console.log(registerData);
     const regData = await registerUser(registerData);
-    const trainername = regData.trainername;
-    const password = regData.password;
-    const formData = this.state.regData;
-    const id = this.state.id;
-    this.reloadReg(trainername, password);
-    const currentUser = await loginUser(this.state.formData);
-    this.setState({
-      currentUser,
-      id
-    });
+    // const trainername = regData.trainername;
+    // const password = regData.password;
+    // const formData = this.state.regData;
+    // const id = this.state.id;
+    // this.reloadReg(trainername, password);
+    // const currentUser = await loginUser(this.state.formData);
+    // this.setState({
+    //   currentUser,
+    //   id
+    // });
   };
 
   render() {
@@ -55,6 +66,10 @@ export default class App extends Component {
         <div>
           <Link to="/pokemons/pokedex">Pokedex</Link>
         </div>
+        {this.state.currentUser && (
+          <p>Hello {this.state.currentUser.trainername}</p>
+        )}
+        <RegisterForm handleRegister={this.handleRegister} />
         <Route path="/pokemons/pokedex" render={() => <Pokedex />} />
       </div>
     );
