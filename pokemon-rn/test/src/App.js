@@ -13,6 +13,7 @@ import { Link, Route, withRouter } from "react-router-dom";
 import Pokedex from "./components/Pokedex";
 import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
+import StartGame from "./components/StartGame";
 
 class App extends Component {
   constructor(props) {
@@ -24,7 +25,8 @@ class App extends Component {
       formData: {
         username: null,
         password: null
-      }
+      },
+      pokemons: null
     };
   }
 
@@ -34,13 +36,12 @@ class App extends Component {
     if (localStorage.getItem("authToken")) {
       const username = localStorage.getItem("username");
       const user = { username };
-      console.log(user);
+      console.log(localStorage.getItem("id"));
       user &&
         this.setState({
           currentUser: user
         });
     }
-    console.log(this.state.currentUser);
   };
 
   // checkMoves = async id => {
@@ -66,6 +67,8 @@ class App extends Component {
     this.setState({
       currentUser
     });
+
+    this.props.history.push("/start");
   };
 
   handleLogin = async (e, loginData) => {
@@ -73,18 +76,17 @@ class App extends Component {
     const currentUser = await loginUser(loginData);
     const id = currentUser.id;
     this.setState({ currentUser, id });
+    this.props.history.push("/start");
   };
 
   handleLogout = () => {
     this.setState({
       currentUser: null
     });
-    console.log("TEST");
     localStorage.removeItem("authToken");
     localStorage.removeItem("name");
-    localStorage.removeItem("trainername");
+    localStorage.removeItem("username");
     localStorage.removeItem("id");
-    this.props.history.push("/welcome");
   };
 
   render() {
@@ -99,20 +101,22 @@ class App extends Component {
           {this.state.currentUser && (
             <button onClick={() => this.handleLogout()}>Logout</button>
           )}
-          
         </div>
         {this.state.currentUser && (
           <p>Hello {this.state.currentUser.username}</p>
         )}
-        <Route
-          path="/users/register"
-          render={() => <RegisterForm handleRegister={this.handleRegister} />}
-        />
-        <Route path="/pokemons/pokedex" render={() => <Pokedex />} />
-        <Route
-          path="/users/login"
-          render={() => <LoginForm handleLogin={this.handleLogin} />}
-        />
+        <div>
+          <Route path="/start" render={() => <StartGame />} />
+          <Route
+            path="/users/register"
+            render={() => <RegisterForm handleRegister={this.handleRegister} />}
+          />
+          <Route path="/pokemons/pokedex" render={() => <Pokedex />} />
+          <Route
+            path="/users/login"
+            render={() => <LoginForm handleLogin={this.handleLogin} />}
+          />
+        </div>
       </div>
     );
   }

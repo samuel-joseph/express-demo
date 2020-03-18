@@ -5,14 +5,13 @@ const api = axios.create({
 });
 
 export const loginUser = async loginData => {
-  console.log(loginData);
   const resp = await api.post("/users/login", loginData);
-  localStorage.setItem("authToken", resp.data.auth_token);
-  api.defaults.headers.common.authorization = `Bearer ${resp.data.auth_token}`;
-  localStorage.setItem("name", resp.data.name);
+  localStorage.setItem("authToken", resp.data.token);
+  api.defaults.headers.common.authorization = `Bearer ${resp.data.token}`;
+  localStorage.setItem("name", resp.data.user.username);
   localStorage.setItem("trainername", resp.data.trainername);
   localStorage.setItem("id", resp.data.user.id);
-  console.log(resp.data.user.id);
+  console.log(resp.data.user);
   return resp.data.user;
 };
 
@@ -29,6 +28,11 @@ export const registerUser = async registerData => {
   return resp.data.user;
 };
 
+export const getAllTrainer = async () => {
+  const resp = await api.post("/users/all");
+  return resp;
+};
+
 export const verifyUser = () => {
   const token = localStorage.getItem("authToken");
   if (token) {
@@ -38,6 +42,7 @@ export const verifyUser = () => {
 
 export const userData = async () => {
   const resp = await api.get("users/verify");
+  console.log(resp);
   return resp;
 };
 
@@ -46,13 +51,13 @@ export const getAllPokemon = async () => {
   return resp.data.pokemons;
 };
 
-export const trainerPokemon = async () => {
-  const resp = await api.get("pokemons/trainer");
-  return resp.data.pokemons;
-};
-
 export const storePokemon = async postData => {
   let pokemon = await api.post("/pokemons", postData);
+};
+
+export const trainerPokemon = async () => {
+  let resp = await api.get("pokemons/trainer");
+  console.log(resp);
 };
 
 export const getPokemon = async id => {
