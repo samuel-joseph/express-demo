@@ -7,13 +7,15 @@ class ChooseStarter extends Component {
     super(props);
 
     this.state = {
+      ownPokemon: null,
       starters: [],
       formData: {
         name: null,
         frontImage: null,
         backImage: null,
         health: null
-      }
+      },
+      isClicked: false
     };
   }
 
@@ -23,33 +25,29 @@ class ChooseStarter extends Component {
     for (let i = 0; i < 3; i++) {
       const resp = await getPokemon(id[i]);
       starters.push(resp);
+      console.log(resp);
     }
     this.setState({ starters });
   };
 
-  passPokemon = async (name, frontImage, backImage, health) => {
-    console.log(name);
-    this.setState(prevState => ({
+  chosenPokemon = pokemon => {
+    this.setState({
       formData: {
-        ...prevState.formData,
-        name,
-        frontImage,
-        backImage,
-        health
+        ...this.state.formData,
+        name: pokemon.name,
+        frontImage: pokemon.frontImage,
+        backImage: pokemon.backImage,
+        health: pokemon.health
       }
-    }));
+    });
+    this.setState({
+      isClicked: true
+    });
   };
 
-  chosenPokemon = async pokemon => {
-    this.passPokemon(
-      pokemon.name,
-      pokemon.frontImage,
-      pokemon.backImage,
-      pokemon.health
-    );
-    const formData = this.state.formData;
-    console.log(formData);
-    const resp = await storePokemon(formData);
+  savePokemon = async () => {
+    const resp = await storePokemon(this.state.formData);
+    console.log(resp);
   };
 
   render() {
@@ -63,9 +61,13 @@ class ChooseStarter extends Component {
                   onClick={() => this.chosenPokemon(pokemon)}
                   src={pokemon.frontImage}
                 />
-                {console.log(this.state.formData)}
               </div>
             ))}
+            {this.state.isClicked && (
+              <div>
+                <button onClick={() => this.savePokemon()}>OK</button>
+              </div>
+            )}
           </div>
         )}
       </div>

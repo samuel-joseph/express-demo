@@ -55,6 +55,7 @@ export const storePokemon = async postData => {
   let pokemon = await api.post("/pokemons", postData);
   console.log(postData);
   console.log("pokemon stored");
+  return pokemon;
 };
 
 export const trainerPokemon = async () => {
