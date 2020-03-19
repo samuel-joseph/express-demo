@@ -18,11 +18,8 @@ class StartGame extends Component {
   }
 
   componentDidMount = async () => {
-    const id = localStorage.getItem("id");
-    const name = localStorage.getItem("name");
     const pokemons = await trainerPokemon();
-    console.log(pokemons);
-    this.setState({ id, name, pokemons });
+    this.setState({ pokemons });
   };
 
   render() {

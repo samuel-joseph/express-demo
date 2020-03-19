@@ -53,12 +53,13 @@ export const getAllPokemon = async () => {
 
 export const storePokemon = async postData => {
   let pokemon = await api.post("/pokemons", postData);
-  console.log(postData);
+  console.log(pokemon);
   console.log("pokemon stored");
   return pokemon;
 };
 
 export const trainerPokemon = async () => {
+  console.log("HELLOOOO");
   let resp = await api.get("pokemons/trainer");
   return resp.data.pokemons;
 };
@@ -66,6 +67,14 @@ export const trainerPokemon = async () => {
 export const getMoves = async id => {
   console.log(id);
   let resp = await api.get(`/pokemons/${id}/moves`);
+  console.log(resp);
+  return resp.data.moves;
+};
+
+export const addMoves = async (id, moveData) => {
+  console.log(moveData);
+  console.log(id);
+  let resp = await api.post(`/pokemons/${id}/moves`, moveData);
   console.log(resp);
   return resp;
 };

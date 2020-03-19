@@ -1,22 +1,27 @@
 import React, { Component } from "react";
 import { Link, Route, withRouter } from "react-router-dom";
 
-import { trainerPokemon } from "../services/api_helper";
+import { trainerPokemon, getMoves } from "../services/api_helper";
 
 class Trainer extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      pokemon: null,
+      pokemon: [],
       moves: []
     };
   }
 
   componentDidMount = async () => {
     const pokemon = await trainerPokemon();
+    const moves = [];
     console.log(pokemon);
-    this.setState({ pokemon });
+    for (let i = 0; i < pokemon.length; i++) {
+      moves.push(await getMoves(pokemon[i].id));
+    }
+    console.log(moves);
+    this.setState({ pokemon, moves });
   };
 
   render() {
