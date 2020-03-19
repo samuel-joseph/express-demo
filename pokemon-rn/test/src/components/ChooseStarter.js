@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link, Route, withRouter } from "react-router-dom";
-import { getPokemon, storePokemon } from "../services/api_helper";
+import { getPokemon, storePokemon, getMoves } from "../services/api_helper";
 
 class ChooseStarter extends Component {
   constructor(props) {
@@ -8,6 +8,7 @@ class ChooseStarter extends Component {
 
     this.state = {
       ownPokemon: null,
+      chosenPokemonId: null,
       starters: [],
       formData: {
         name: null,
@@ -31,6 +32,7 @@ class ChooseStarter extends Component {
   };
 
   chosenPokemon = pokemon => {
+    const chosenPokemonId = pokemon.id;
     this.setState({
       formData: {
         ...this.state.formData,
@@ -41,13 +43,18 @@ class ChooseStarter extends Component {
       }
     });
     this.setState({
-      isClicked: true
+      isClicked: true,
+      chosenPokemonId
     });
   };
 
   savePokemon = async () => {
-    const resp = await storePokemon(this.state.formData);
-    this.props.history.push("/trainer");
+    const pokemon = await storePokemon(this.state.formData);
+    console.log(this.state.chosenPokemonId);
+    const moves = await getMoves(this.state.chosenPokemonId);
+    console.log(moves);
+
+    this.props.history.push("/start");
   };
 
   render() {
@@ -58,7 +65,7 @@ class ChooseStarter extends Component {
             {this.state.starters.map(pokemon => (
               <div>
                 <img
-                  clasName="pokeball"
+                  className="pokeball"
                   onClick={() => this.chosenPokemon(pokemon)}
                   src="https://pngimage.net/wp-content/uploads/2018/06/pokeball-pixel-png-8.png"
                 />

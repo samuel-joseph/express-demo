@@ -14,6 +14,7 @@ import Pokedex from "./components/Pokedex";
 import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
 import StartGame from "./components/StartGame";
+import Trainer from "./components/Trainer";
 
 class App extends Component {
   constructor(props) {

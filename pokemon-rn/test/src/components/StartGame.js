@@ -4,6 +4,7 @@ import { Link, Route, withRoute } from "react-router-dom";
 import { trainerPokemon } from "../services/api_helper";
 
 import ChooseStarter from "./ChooseStarter";
+import Trainer from "./Trainer";
 
 class StartGame extends Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class StartGame extends Component {
     const id = localStorage.getItem("id");
     const name = localStorage.getItem("name");
     const pokemons = await trainerPokemon();
+    console.log(pokemons);
     this.setState({ id, name, pokemons });
   };
 
@@ -27,7 +29,7 @@ class StartGame extends Component {
     return (
       <div>
         {console.log(this.state.pokemons)}
-        {this.state.pokemons ? <p>checkY</p> : <ChooseStarter />}
+        {this.state.pokemons ? <Trainer /> : <ChooseStarter />}
       </div>
     );
   }
