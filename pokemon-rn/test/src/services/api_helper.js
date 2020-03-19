@@ -53,6 +53,8 @@ export const getAllPokemon = async () => {
 
 export const storePokemon = async postData => {
   let pokemon = await api.post("/pokemons", postData);
+  console.log(postData);
+  console.log("pokemon stored");
 };
 
 export const trainerPokemon = async () => {
@@ -63,7 +65,7 @@ export const trainerPokemon = async () => {
 export const getPokemon = async id => {
   const resp = await api.get(`/pokemons/${id}`);
   console.log(resp);
-  return resp.data;
+  return resp.data.pokemon;
 };
 
 export const update = async (id, postData) => {

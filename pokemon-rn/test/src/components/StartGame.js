@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link, Route, withRoute } from "react-router-dom";
 import { trainerPokemon } from "../services/api_helper";
 
+import ChooseStarter from "./ChooseStarter";
+
 class StartGame extends Component {
   constructor(props) {
     super(props);
