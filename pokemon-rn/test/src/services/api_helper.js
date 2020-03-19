@@ -8,6 +8,7 @@ export const loginUser = async loginData => {
   const resp = await api.post("/users/login", loginData);
   localStorage.setItem("authToken", resp.data.token);
   api.defaults.headers.common.authorization = `Bearer ${resp.data.token}`;
+  console.log(resp.data.token);
   localStorage.setItem("name", resp.data.user.username);
   localStorage.setItem("trainername", resp.data.trainername);
   localStorage.setItem("id", resp.data.user.id);
@@ -59,8 +60,8 @@ export const storePokemon = async postData => {
 };
 
 export const trainerPokemon = async () => {
-  console.log("HELLOOOO");
   let resp = await api.get("pokemons/trainer");
+  console.log(resp);
   return resp.data.pokemons;
 };
 
@@ -69,6 +70,11 @@ export const getMoves = async id => {
   let resp = await api.get(`/pokemons/${id}/moves`);
   console.log(resp);
   return resp.data.moves;
+};
+
+export const ownedPokemon = async id => {
+  let resp = await api.get(`/pokemons/trainer/${id}`);
+  return resp.data;
 };
 
 export const addMoves = async (id, moveData) => {

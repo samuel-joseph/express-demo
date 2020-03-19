@@ -9,25 +9,34 @@ class Trainer extends Component {
 
     this.state = {
       pokemon: [],
-      moves: []
+      moves: [],
+      group1: {
+        pokemon: [],
+        moves: []
+      }
     };
   }
 
   componentDidMount = async () => {
     const pokemon = await trainerPokemon();
-    const moves = [];
     console.log(pokemon);
+    let moves = [];
     for (let i = 0; i < pokemon.length; i++) {
-      moves.push(await getMoves(pokemon[i].id));
+      moves = await getMoves(pokemon[i].id);
     }
-    console.log(moves);
     this.setState({ pokemon, moves });
   };
 
   render() {
     return (
       <div>
-        {console.log(this.state.pokemon)}
+        {this.state.moves && (
+          <>
+            {this.state.moves.map(data => (
+              <div>test</div>
+            ))}
+          </>
+        )}
         {this.state.pokemon && (
           <div>
             {this.state.pokemon.map(data => (
@@ -37,6 +46,7 @@ class Trainer extends Component {
                 <p>{data.health}</p>
               </div>
             ))}
+            {this.state.moves && this.state.moves.map(data => <>{data.name}</>)}
           </div>
         )}
       </div>

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Link, Route, withRoute } from "react-router-dom";
-import { trainerPokemon } from "../services/api_helper";
+import { trainerPokemon, ownedPokemon } from "../services/api_helper";
 
 import ChooseStarter from "./ChooseStarter";
 import Trainer from "./Trainer";
@@ -18,17 +18,15 @@ class StartGame extends Component {
   }
 
   componentDidMount = async () => {
-    const pokemons = await trainerPokemon();
-    this.setState({ pokemons });
+    console.log("This is StartGame component");
+    const pokemons = await ownedPokemon(localStorage.getItem("id"));
+    if (pokemons.pokemon.length !== 0) {
+      this.setState({ pokemons });
+    }
   };
 
   render() {
-    return (
-      <div>
-        {console.log(this.state.pokemons)}
-        {this.state.pokemons ? <Trainer /> : <ChooseStarter />}
-      </div>
-    );
+    return <div>{this.state.pokemons ? <Trainer /> : <ChooseStarter />}</div>;
   }
 }
 
