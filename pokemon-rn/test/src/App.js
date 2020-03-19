@@ -116,6 +116,7 @@ class App extends Component {
             path="/users/login"
             render={() => <LoginForm handleLogin={this.handleLogin} />}
           />
+          <Route path="/trainer" render={() => <Trainer />} />
         </div>
       </div>
     );

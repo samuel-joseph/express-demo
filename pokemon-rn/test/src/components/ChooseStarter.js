@@ -47,7 +47,7 @@ class ChooseStarter extends Component {
 
   savePokemon = async () => {
     const resp = await storePokemon(this.state.formData);
-    console.log(resp);
+    this.props.history.push("/trainer");
   };
 
   render() {
@@ -58,13 +58,16 @@ class ChooseStarter extends Component {
             {this.state.starters.map(pokemon => (
               <div>
                 <img
+                  clasName="pokeball"
                   onClick={() => this.chosenPokemon(pokemon)}
-                  src={pokemon.frontImage}
+                  src="https://pngimage.net/wp-content/uploads/2018/06/pokeball-pixel-png-8.png"
                 />
               </div>
             ))}
             {this.state.isClicked && (
               <div>
+                <h4>{this.state.formData.name}</h4>
+                <img className="pokemon" src={this.state.formData.frontImage} />
                 <button onClick={() => this.savePokemon()}>OK</button>
               </div>
             )}
