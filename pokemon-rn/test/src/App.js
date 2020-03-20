@@ -10,6 +10,7 @@ import {
 } from "./services/api_helper";
 import { Link, Route, withRouter } from "react-router-dom";
 
+import Forest from "./components/Forest";
 import Pokedex from "./components/Pokedex";
 import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
@@ -37,10 +38,11 @@ class App extends Component {
     if (localStorage.getItem("authToken")) {
       const username = localStorage.getItem("username");
       const user = { username };
-      console.log(localStorage.getItem("id"));
+      const id = localStorage.getItem("id");
       user &&
         this.setState({
-          currentUser: user
+          currentUser: user,
+          id
         });
     }
   };
@@ -94,6 +96,8 @@ class App extends Component {
     return (
       <div className="App">
         <div>
+          {localStorage.getItem("id") && <Link to="/trainer">Profile</Link>}
+          {localStorage.getItem("id") && <Link to="/forest">Forest</Link>}
           <Link to="/pokemons/pokedex">Pokedex</Link>
           {!this.state.currentUser && (
             <Link to="/users/register">Register</Link>
@@ -103,10 +107,9 @@ class App extends Component {
             <button onClick={() => this.handleLogout()}>Logout</button>
           )}
         </div>
-        {this.state.currentUser && (
-          <p>Hello {this.state.currentUser.username}</p>
-        )}
+        {this.state.currentUser && <h1> {this.state.currentUser.username}</h1>}
         <div>
+          <Route path="/forest" render={() => <Forest />} />
           <Route path="/start" render={() => <StartGame />} />
           <Route
             path="/users/register"

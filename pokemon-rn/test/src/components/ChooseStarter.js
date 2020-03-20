@@ -115,6 +115,12 @@ class ChooseStarter extends Component {
         {console.log(this.state.arrayMoveData)}
         {this.state.starters && (
           <div>
+            {this.state.isClicked && (
+              <div>
+                <h4>{this.state.formData.name}</h4>
+                <img className="pokemon" src={this.state.formData.frontImage} />
+              </div>
+            )}
             {this.state.starters.map((pokemon, index) => (
               <div key={index}>
                 <img
@@ -127,11 +133,7 @@ class ChooseStarter extends Component {
               </div>
             ))}
             {this.state.isClicked && (
-              <div>
-                <h4>{this.state.formData.name}</h4>
-                <img className="pokemon" src={this.state.formData.frontImage} />
-                <button onClick={() => this.savePokemon()}>OK</button>
-              </div>
+              <button onClick={() => this.savePokemon()}>OK</button>
             )}
           </div>
         )}
