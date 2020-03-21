@@ -87,7 +87,7 @@ export const addMoves = async (id, moveData) => {
 
 export const getPokemon = async id => {
   const resp = await api.get(`/pokemons/${id}`);
-  console.log(resp);
+  // console.log(resp);
   return resp.data.pokemon;
 };
 
