@@ -31,18 +31,14 @@ class Forest extends Component {
     };
   }
 
-  // componentDidMount = async () => {
-  //   for (let i = 0; i < this.state.routeMaps.length; i++) {
-  //     for (let j = 0; j < this.state.routeMaps[i].arrayPokemons.length; j++) {
-  //       const id = this.state.routeMaps[i].arrayPokemons[j];
-  //       const pokemons = await getPokemon(id);
-  //       this.setState({ pokemons: [...this.state.pokemons, pokemons] });
-  //     }
-  //   }
-  // };
+  resetMap = () => {
+    const pokemons = "";
+    this.setState({ pokemons });
+  };
 
   forestPokemons = async arrayPokemons => {
     const id = arrayPokemons;
+    this.resetMap();
     for (let i = 0; i < id.length; i++) {
       const pokemons = await getPokemon(id[i]);
       this.setState({ pokemons: [...this.state.pokemons, pokemons] });
