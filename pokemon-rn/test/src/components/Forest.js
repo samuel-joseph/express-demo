@@ -31,24 +31,37 @@ class Forest extends Component {
     };
   }
 
-  componentDidMount = async () => {
-    for (let i = 0; i < this.state.routeMaps.length; i++) {
-      for (let j = 0; j < this.state.routeMaps[i].arrayPokemons.length; j++) {
-        const id = this.state.routeMaps[i].arrayPokemons[j];
-        const pokemons = await getPokemon(id);
-        this.setState({ pokemons: [...this.state.pokemons, pokemons] });
-      }
-    }
-  };
+  // componentDidMount = async () => {
+  //   for (let i = 0; i < this.state.routeMaps.length; i++) {
+  //     for (let j = 0; j < this.state.routeMaps[i].arrayPokemons.length; j++) {
+  //       const id = this.state.routeMaps[i].arrayPokemons[j];
+  //       const pokemons = await getPokemon(id);
+  //       this.setState({ pokemons: [...this.state.pokemons, pokemons] });
+  //     }
+  //   }
+  // };
 
-  forestPokemons = async a => {
+  forestPokemons = async arrayPokemons => {
+    const id = arrayPokemons;
+    for (let i = 0; i < id.length; i++) {
+      const pokemons = await getPokemon(id[i]);
+      this.setState({ pokemons: [...this.state.pokemons, pokemons] });
+    }
   };
 
   render() {
     return (
       <div>
         <div>
-          {console.log(this.state.pokemons)}
+          {this.state.pokemons && (
+            <div>
+              {this.state.pokemons.map(data => (
+                <>
+                  <img src={data.frontImage} />
+                </>
+              ))}
+            </div>
+          )}
           {this.state.routeMaps.map(data => (
             <div>
               <img
