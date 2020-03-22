@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Link, Route, withRouter } from "react-router-dom";
 import { getPokemon } from "../services/api_helper";
 
+import Battle from "./Battle";
+
 class Forest extends Component {
   constructor(props) {
     super(props);
@@ -58,7 +60,7 @@ class Forest extends Component {
     return (
       <div>
         {this.state.proceed ? (
-          <div></div>
+          <Battle pokemonID={this.state.pokemons} />
         ) : (
           <>
             <div>
