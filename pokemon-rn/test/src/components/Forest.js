@@ -30,7 +30,7 @@ class Forest extends Component {
         }
       ],
       pokemons: [],
-      chosenPokemon: [],
+      chosenPokemon: null,
       isClicked: false,
       proceed: false
     };
@@ -55,8 +55,10 @@ class Forest extends Component {
 
   battle = () => {
     const arrayPokemons = this.state.pokemons;
-    const id = [Math.floor(Math.random() * arrayPokemons.length)];
-    const chosenPokemon = this.state.pokemons[id];
+    const chosenPokemon = this.state.pokemons.pop([
+      Math.floor(Math.random() * arrayPokemons.length)
+    ]);
+    console.log(chosenPokemon);
     this.setState({ proceed: true, chosenPokemon });
   };
 
