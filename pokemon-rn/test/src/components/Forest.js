@@ -30,6 +30,7 @@ class Forest extends Component {
         }
       ],
       pokemons: [],
+      chosenPokemon: [],
       isClicked: false,
       proceed: false
     };
@@ -53,14 +54,17 @@ class Forest extends Component {
   };
 
   battle = () => {
-    this.setState({ proceed: true });
+    const arrayPokemons = this.state.pokemons;
+    const id = [Math.floor(Math.random() * arrayPokemons.length)];
+    const chosenPokemon = this.state.pokemons[id];
+    this.setState({ proceed: true, chosenPokemon });
   };
 
   render() {
     return (
       <div>
         {this.state.proceed ? (
-          <Battle pokemonID={this.state.pokemons} />
+          <Battle pokemonID={this.state.chosenPokemon} />
         ) : (
           <>
             <div>

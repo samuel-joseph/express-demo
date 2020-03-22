@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link, Route, withRouter } from "react-router-dom";
 
-import { trainerPokemon } from "../services/api_helper";
+import { trainerPokemon, getMoves } from "../services/api_helper";
 
 class Battle extends Component {
   constructor(props) {
@@ -9,18 +9,27 @@ class Battle extends Component {
 
     this.state = {
       randomPokemon: [],
-      userPokemon: null
+      randomPokemonAttack: null,
+      userPokemon: null,
+      userPokemonAttacks: null
     };
   }
 
   componentDidMount = async () => {
     const arrayPokemons = this.props.pokemonID;
-    const chosenPokemon = [Math.floor(Math.random() * arrayPokemons.length)];
     const randomPokemon = [];
-    randomPokemon.push(arrayPokemons[chosenPokemon]);
+    randomPokemon.push(arrayPokemons);
     const userPokemon = await trainerPokemon();
+    console.log(arrayPokemons);
+    const randomPokemonAttack = await getMoves(arrayPokemons.id);
+    const userPokemonAttacks = await getMoves(userPokemon[0].id);
 
-    this.setState({ randomPokemon, userPokemon });
+    this.setState({
+      randomPokemon,
+      userPokemon,
+      randomPokemonAttack,
+      userPokemonAttacks
+    });
   };
 
   render() {
@@ -28,15 +37,28 @@ class Battle extends Component {
       <div>
         {this.state.userPokemon && (
           <div>
+            {console.log(this.state.randomPokemonAttack)}
             <div>
-              {this.state.randomPokemon.map(stray => (
-                <div>
+              {this.state.randomPokemon.map((stray, index) => (
+                <div key={index}>
                   <div>
                     <img src={stray.frontImage} />
                   </div>
                   <div>
                     <p>{stray.name}</p>
                     <p>{stray.health}</p>
+                  </div>
+                  <div>
+                    {this.state.randomPokemonAttack && (
+                      <>
+                        {this.state.randomPokemonAttack.map(data => (
+                          <div>
+                            {data.name}
+                            {data.attack}
+                          </div>
+                        ))}
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
@@ -53,6 +75,18 @@ class Battle extends Component {
                   </div>
                 </div>
               ))}
+            </div>
+            <div>
+              {this.state.userPokemonAttacks && (
+                <>
+                  {this.state.userPokemonAttacks.map(data => (
+                    <div>
+                      {data.name}
+                      {data.attack}
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
           </div>
         )}
