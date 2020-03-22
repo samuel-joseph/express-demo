@@ -42,7 +42,9 @@ class Trainer extends Component {
                   src={data.frontImage}
                   onClick={() => this.showMoves(data.id)}
                 />
-                <p>{data.health}</p>
+                <p>
+                  {data.current_health}/{data.health}
+                </p>
               </div>
             ))}
             {this.state.moves &&

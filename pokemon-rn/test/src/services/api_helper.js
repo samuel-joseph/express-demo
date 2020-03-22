@@ -61,7 +61,7 @@ export const storePokemon = async postData => {
 
 export const trainerPokemon = async () => {
   let resp = await api.get("pokemons/trainer");
-  console.log(resp);
+  console.log(resp.data.pokemons);
   return resp.data.pokemons;
 };
 

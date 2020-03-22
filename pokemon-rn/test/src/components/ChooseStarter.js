@@ -31,7 +31,8 @@ class ChooseStarter extends Component {
         name: null,
         frontImage: null,
         backImage: null,
-        health: null
+        health: null,
+        current_health: null
       },
       isClicked: false
     };
@@ -74,7 +75,8 @@ class ChooseStarter extends Component {
         name: pokemon.name,
         frontImage: pokemon.frontImage,
         backImage: pokemon.backImage,
-        health: pokemon.health
+        health: pokemon.health,
+        current_health: pokemon.current_health
       }
     });
     this.passMoves(moves);
