@@ -16,6 +16,7 @@ import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
 import StartGame from "./components/StartGame";
 import Trainer from "./components/Trainer";
+import Pokecenter from "./components/Pokecenter";
 
 class App extends Component {
   constructor(props) {
@@ -121,6 +122,7 @@ class App extends Component {
             render={() => <LoginForm handleLogin={this.handleLogin} />}
           />
           <Route path="/trainer" render={() => <Trainer />} />
+          <Route path="/pokecenter" render={() => <Pokecenter />} />
         </div>
       </div>
     );

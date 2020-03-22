@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link, Route, withRouter } from "react-router-dom";
 
 import { trainerPokemon, getMoves, update } from "../services/api_helper";
+import Pokecenter from "./Pokecenter";
 
 class Battle extends Component {
   constructor(props) {
@@ -68,6 +69,7 @@ class Battle extends Component {
 
       const formData = this.state.formData;
       const updateHp = await update(id, formData);
+      this.props.history.push("/pokecenter");
     } else if (npcHealth < 0 || npcHealth === 0) {
       this.setState({
         npc: { ...this.state.npc, current_health: 0 },
@@ -76,6 +78,7 @@ class Battle extends Component {
 
       const formData = this.state.formData;
       const updateHp = await update(id, formData);
+      this.props.history.push("/pokecenter");
     } else if (userHealth < 0 || userHealth === 0) {
       this.setState({
         fighterPokemon: {
@@ -173,7 +176,9 @@ class Battle extends Component {
   render() {
     return (
       <div>
-        {this.state.fighterPokemon && (
+        {this.state.formData.current_health <= 0 ? (
+          <Pokecenter />
+        ) : (
           <div>
             <div>
               <div>
