@@ -27,7 +27,9 @@ class Forest extends Component {
           arrayPokemons: [42, 95, 108, 79, 126, 143]
         }
       ],
-      pokemons: []
+      pokemons: [],
+      isClicked: false,
+      proceed: false
     };
   }
 
@@ -41,33 +43,51 @@ class Forest extends Component {
     this.resetMap();
     for (let i = 0; i < id.length; i++) {
       const pokemons = await getPokemon(id[i]);
-      this.setState({ pokemons: [...this.state.pokemons, pokemons] });
+      this.setState({
+        pokemons: [...this.state.pokemons, pokemons],
+        isClicked: true
+      });
     }
+  };
+
+  battle = () => {
+    this.setState({ proceed: true });
   };
 
   render() {
     return (
       <div>
-        <div>
-          {this.state.pokemons && (
+        {this.state.proceed ? (
+          <div></div>
+        ) : (
+          <>
             <div>
-              {this.state.pokemons.map(data => (
-                <>
-                  <img src={data.frontImage} />
-                </>
+              {this.state.pokemons && (
+                <div>
+                  {this.state.pokemons.map(data => (
+                    <>
+                      <img src={data.frontImage} />
+                    </>
+                  ))}
+                </div>
+              )}
+              {this.state.routeMaps.map(data => (
+                <div>
+                  <img
+                    onClick={() => this.forestPokemons(data.arrayPokemons)}
+                    src={data.image}
+                  />
+                  <h5>{data.name}</h5>
+                </div>
               ))}
             </div>
-          )}
-          {this.state.routeMaps.map(data => (
-            <div>
-              <img
-                onClick={() => this.forestPokemons(data.arrayPokemons)}
-                src={data.image}
-              />
-              <h5>{data.name}</h5>
-            </div>
-          ))}
-        </div>
+            {this.state.isClicked && (
+              <div>
+                <button onClick={() => this.battle()}>OK</button>
+              </div>
+            )}
+          </>
+        )}
       </div>
     );
   }
