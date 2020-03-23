@@ -22,7 +22,6 @@ class Battle extends Component {
         backImage: null,
         health: null
       },
-      // postMove: [],
       postMove: [],
       arrayPostMoves: [],
       npcAttack: null,
@@ -63,7 +62,7 @@ class Battle extends Component {
         health
       }
     });
-    console.log(npcAttack);
+    console.log(userPokemon.length);
 
     for (let i = 0; i < npcAttack.length; i++) {
       const postMoveCopy = {
@@ -221,7 +220,6 @@ class Battle extends Component {
   readyCatch = async () => {
     const postData = this.state.postData;
     const postMove = this.state.postMove;
-    const id = this.state.npc.id;
     const hp = this.state.npc.current_health;
     const totalHp = this.state.fighterPokemon.health;
     const chance = totalHp * 0.15;
@@ -232,7 +230,7 @@ class Battle extends Component {
       console.log(postMove);
       const resp = await storePokemon(postData);
       for (let i = 0; i < postMove.length; i++) {
-        const resp1 = await addMoves(id, postMove[i]);
+        const resp1 = await addMoves(resp.data.id, postMove[i]);
       }
       this.props.history.push("/start");
     }
@@ -299,10 +297,14 @@ class Battle extends Component {
           </div>
         )}
         {this.state.catch && (
-          <img
-            onClick={() => this.readyCatch()}
-            src="https://pngimage.net/wp-content/uploads/2018/06/pokeball-pixel-png-8.png"
-          />
+          <>
+            {this.state.userPokemon.length <= 6 && (
+              <img
+                onClick={() => this.readyCatch()}
+                src="https://pngimage.net/wp-content/uploads/2018/06/pokeball-pixel-png-8.png"
+              />
+            )}
+          </>
         )}
       </div>
     );

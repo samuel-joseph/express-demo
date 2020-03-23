@@ -66,7 +66,7 @@ class Pokecenter extends Component {
                 <div>
                   <img src={data.frontImage} />
                   <div>
-                    {this.state.formData.current_health}/{data.health}
+                    {data.current_health}/{data.health}
                   </div>
                 </div>
               ))}

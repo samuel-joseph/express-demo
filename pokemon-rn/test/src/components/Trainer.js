@@ -10,10 +10,7 @@ class Trainer extends Component {
     this.state = {
       pokemon: [],
       moves: [],
-      group1: {
-        pokemon: [],
-        moves: []
-      }
+      group1: [{}]
     };
   }
 
@@ -27,6 +24,7 @@ class Trainer extends Component {
 
   showMoves = async id => {
     const moves = await getMoves(id);
+    console.log(moves);
     this.setState({ moves });
   };
 
