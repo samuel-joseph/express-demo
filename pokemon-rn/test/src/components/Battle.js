@@ -26,6 +26,7 @@ class Battle extends Component {
     const fighterPokemon = userPokemon.pop();
     const npcAttack = await getMoves(npc.id);
     const userPokemonAttacks = await getMoves(fighterPokemon.id);
+    
 
     this.setState({
       npc,
@@ -176,7 +177,7 @@ class Battle extends Component {
   render() {
     return (
       <div>
-        {this.state.formData.current_health <= 0 ? (
+        {this.state.fighterPokemon.current_health <= 0 ? (
           <Pokecenter />
         ) : (
           <div>

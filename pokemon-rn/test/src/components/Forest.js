@@ -59,6 +59,7 @@ class Forest extends Component {
       Math.floor(Math.random() * arrayPokemons.length)
     ]);
     console.log(chosenPokemon);
+
     this.setState({ proceed: true, chosenPokemon });
   };
 
