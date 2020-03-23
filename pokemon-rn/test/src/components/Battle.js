@@ -1,7 +1,13 @@
 import React, { Component } from "react";
 import { Link, Route, withRouter } from "react-router-dom";
 
-import { trainerPokemon, getMoves, update } from "../services/api_helper";
+import {
+  trainerPokemon,
+  getMoves,
+  update,
+  storePokemon,
+  addMoves
+} from "../services/api_helper";
 import Pokecenter from "./Pokecenter";
 
 class Battle extends Component {
@@ -10,10 +16,41 @@ class Battle extends Component {
 
     this.state = {
       npc: [],
+      postData: {
+        name: null,
+        frontImage: null,
+        backImage: null,
+        health: null
+      },
+      // postMove: [],
+      postMove: [
+        {
+          name: null,
+          attack: null,
+          isLearned: true
+        },
+        {
+          name: null,
+          attack: null,
+          isLearned: true
+        },
+        {
+          name: null,
+          attack: null,
+          isLearned: true
+        },
+        {
+          name: null,
+          attack: null,
+          isLearned: true
+        }
+      ],
+      arrayPostMoves: [],
       npcAttack: null,
       userPokemon: null,
       userPokemonAttacks: null,
       fighterPokemon: [],
+      catch: false,
       formData: {
         current_health: null
       }
@@ -26,15 +63,44 @@ class Battle extends Component {
     const fighterPokemon = userPokemon.pop();
     const npcAttack = await getMoves(npc.id);
     const userPokemonAttacks = await getMoves(fighterPokemon.id);
-    
+    const name = npc.name;
+    const frontImage = npc.frontImage;
+    const backImage = npc.backImage;
+    const health = npc.health;
+    const moveName = npcAttack.name;
+    const moveAttack = npcAttack.attack;
+    console.log(npcAttack.length);
 
     this.setState({
       npc,
       userPokemon,
       fighterPokemon,
       npcAttack,
-      userPokemonAttacks
+      userPokemonAttacks,
+      postData: {
+        name,
+        frontImage,
+        backImage,
+        health
+      }
     });
+
+    for (let i = 0; i < 2; i++) {
+      // let postMoveCopy = JSON.parse(JSON.stringify(this.state.postMove));
+      // console.log(postMoveCopy);
+      const postMoveCopy = {
+        name: this.state.npcAttack[i].name,
+        attack: this.state.npcAttack[i].attack,
+        isLearned: this.state.npcAttack[i].isLearned
+      };
+      // postMoveCopy.name = this.state.npcAttack[i].name;
+      // postMoveCopy.attack = this.state.npcAttack[i].attack;
+      // postMoveCopy.isLearned = this.state.npcAttack[i].isLearned;
+      console.log(postMoveCopy);
+      this.setState(prevState => ({
+        postMove: [postMoveCopy, ...prevState.postMove]
+      }));
+    }
   };
 
   randomFunc(random) {
@@ -43,11 +109,15 @@ class Battle extends Component {
   }
 
   battleSequence = async () => {
-    let user = localStorage.getItem("trainername");
+    console.log(this.state.postMove);
+    // if (this.state.arrayPostMoves.length === 0) {
+    //   // for (let i = 0; i<)
+    //   // this.setState({});
+    //   // console.log(this,)
+    // }
     let id = this.state.fighterPokemon.id;
-    let userCurrent_health = this.state.fighterPokemon.current_health;
-    let npcCurrent_health = this.state.npc.current_health;
     let npcHealth = this.state.npc.current_health;
+    let halfHp = this.state.npc.health / 2;
     let randomNpcAttack = this.randomFunc(this.state.npcAttack);
     let npcAttack = randomNpcAttack.attack;
 
@@ -58,9 +128,9 @@ class Battle extends Component {
     npcHealth = npcHealth - userAttack;
     userHealth = userHealth - npcAttack;
 
-    console.log(npcHealth);
-    console.log(userHealth);
-
+    if (npcHealth <= halfHp) {
+      this.setToTrue();
+    }
     if (npcHealth <= 0 && userHealth <= 0) {
       this.setState({
         npc: { ...this.state.npc, current_health: 0 },
@@ -174,6 +244,30 @@ class Battle extends Component {
     // );
   };
 
+  setToTrue = () => {
+    this.setState({ catch: true });
+  };
+
+  readyCatch = async () => {
+    const postData = this.state.postData;
+    const postMove = this.state.postMove;
+    const id = this.state.npc.id;
+    const hp = this.state.npc.current_health;
+    const totalHp = this.state.fighterPokemon.health;
+    const chance = totalHp * 0.15;
+    const dice = Math.floor(Math.random() * Math.floor(hp));
+    console.log(dice);
+
+    if (dice <= chance) {
+      console.log(postMove);
+      const resp = await storePokemon(postData);
+      for (let i = 0; i < postMove.length; i++) {
+        const resp1 = await addMoves(id, postMove[i]);
+      }
+      this.props.history.push("/start");
+    }
+  };
+
   render() {
     return (
       <div>
@@ -233,6 +327,12 @@ class Battle extends Component {
               )}
             </div>
           </div>
+        )}
+        {this.state.catch && (
+          <img
+            onClick={() => this.readyCatch()}
+            src="https://pngimage.net/wp-content/uploads/2018/06/pokeball-pixel-png-8.png"
+          />
         )}
       </div>
     );
