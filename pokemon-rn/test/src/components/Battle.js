@@ -23,28 +23,7 @@ class Battle extends Component {
         health: null
       },
       // postMove: [],
-      postMove: [
-        {
-          name: null,
-          attack: null,
-          isLearned: true
-        },
-        {
-          name: null,
-          attack: null,
-          isLearned: true
-        },
-        {
-          name: null,
-          attack: null,
-          isLearned: true
-        },
-        {
-          name: null,
-          attack: null,
-          isLearned: true
-        }
-      ],
+      postMove: [],
       arrayPostMoves: [],
       npcAttack: null,
       userPokemon: null,
@@ -84,18 +63,14 @@ class Battle extends Component {
         health
       }
     });
+    console.log(npcAttack);
 
-    for (let i = 0; i < 2; i++) {
-      // let postMoveCopy = JSON.parse(JSON.stringify(this.state.postMove));
-      // console.log(postMoveCopy);
+    for (let i = 0; i < npcAttack.length; i++) {
       const postMoveCopy = {
-        name: this.state.npcAttack[i].name,
-        attack: this.state.npcAttack[i].attack,
-        isLearned: this.state.npcAttack[i].isLearned
+        name: npcAttack[i].name,
+        attack: npcAttack[i].attack,
+        isLearned: npcAttack[i].isLearned
       };
-      // postMoveCopy.name = this.state.npcAttack[i].name;
-      // postMoveCopy.attack = this.state.npcAttack[i].attack;
-      // postMoveCopy.isLearned = this.state.npcAttack[i].isLearned;
       console.log(postMoveCopy);
       this.setState(prevState => ({
         postMove: [postMoveCopy, ...prevState.postMove]
@@ -110,11 +85,6 @@ class Battle extends Component {
 
   battleSequence = async () => {
     console.log(this.state.postMove);
-    // if (this.state.arrayPostMoves.length === 0) {
-    //   // for (let i = 0; i<)
-    //   // this.setState({});
-    //   // console.log(this,)
-    // }
     let id = this.state.fighterPokemon.id;
     let npcHealth = this.state.npc.current_health;
     let halfHp = this.state.npc.health / 2;
