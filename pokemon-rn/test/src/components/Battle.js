@@ -10,6 +10,8 @@ import {
   ownedPokemon,
   getPokemon
 } from "../services/api_helper";
+
+import Level from "./Level";
 import Pokecenter from "./Pokecenter";
 
 class Battle extends Component {
@@ -33,7 +35,8 @@ class Battle extends Component {
       catch: false,
       formData: {
         current_health: null
-      }
+      },
+      win: false
     };
   }
 
@@ -118,38 +121,52 @@ class Battle extends Component {
     }
 
     if (npcHealth <= 0 && userHealth <= 0) {
+      const passData = {
+        current_health: 0
+      };
       this.setState({
         npc: { ...this.state.npc, current_health: 0 },
         fighterPokemon: { ...this.state.user, current_health: 0 },
         formData: { ...this.state.formData, current_health: userHealth }
       });
 
-      const formData = this.state.formData;
-      const resp = await update(id, formData);
+      const resp = await update(id, passData);
       this.props.history.push("/pokecenter");
     } else if (npcHealth < 0 || npcHealth === 0) {
+      let total_experience = this.state.fighterPokemon.total_experience;
+      let current_experience = this.state.fighterPokemon.current_experience;
+      let level = this.state.fighterPokemon.level;
+      current_experience = current_experience + total_experience / level;
+
+      if (current_experience >= total_experience) {
+        level++;
+        current_experience = 0;
+      }
+      const passData = {
+        current_health: userHealth,
+        level,
+        current_experience
+      };
+
       this.setState({
         npc: { ...this.state.npc, current_health: 0 },
         formData: { ...this.state.formData, current_health: userHealth }
       });
 
-      const formData = this.state.formData;
-      const resp = await update(id, formData);
+      const resp = await update(id, passData);
       this.props.history.push("/pokecenter");
     } else if (userHealth < 0 || userHealth === 0) {
       const passData = {
         current_health: 0
       };
       const userPokemon = this.state.userPokemon;
-      console.log(userPokemon);
       userPokemon.splice(index, 1);
       const fighterPokemon = userPokemon[0];
-      console.log(userPokemon[0]);
-      console.log(userPokemon);
       this.setState({
         userPokemon,
         fighterPokemon,
-        formData: { ...this.state.formData, current_health: 0 }
+        formData: { ...this.state.formData, current_health: 0 },
+        win: true
       });
       const resp = await update(id, passData);
     } else {
@@ -220,7 +237,7 @@ class Battle extends Component {
     return (
       <div>
         {this.state.fighterPokemon.current_health <= 0 ? (
-          <Pokecenter />
+          <Pokecenter win={this.state.win} />
         ) : (
           <div>
             <div>

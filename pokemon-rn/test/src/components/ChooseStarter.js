@@ -32,7 +32,11 @@ class ChooseStarter extends Component {
         frontImage: null,
         backImage: null,
         health: null,
-        current_health: null
+        current_health: null,
+        level: 1,
+        total_experience: 300,
+        current_experience: 0,
+        fullyEvolved: false
       },
       isClicked: false
     };

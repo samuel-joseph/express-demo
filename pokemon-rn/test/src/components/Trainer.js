@@ -36,6 +36,7 @@ class Trainer extends Component {
             {this.state.pokemon.map(data => (
               <div>
                 <h4>{data.name}</h4>
+                <h5>{data.level}</h5>
                 <img
                   src={data.frontImage}
                   onClick={() => this.showMoves(data.id)}
