@@ -17,42 +17,22 @@ class Pokecenter extends Component {
 
   componentDidMount = async () => {
     const user = await trainerPokemon();
-    const current_health = user[0].current_health;
-    this.setState({ user, formData: { current_health } });
-  };
-
-  fullHealth = current_health => {
-    this.setState({ formData: { ...this.state.formData, current_health } });
+    console.log(user);
   };
 
   heal = async () => {
     const user = this.state.user;
-    const id = this.state.user.id;
-    const formData = this.state.formData;
 
     for (let i = 0; i < user.length; i++) {
-      const id = user[i].id;
-      const fullHp = user[i].health;
-      const current_health = fullHp;
-      console.log(current_health);
-
-      this.fullHealth(current_health);
-      console.log(formData);
-      const regainHp = await update(id, formData);
+      let id = user[i].id;
+      let fullHp = user[i].health;
+      let passData = {
+        current_health: fullHp
+      };
+      const regainHp = await update(id, passData);
       this.setState({ isClicked: true });
+      this.props.history.push("/start");
     }
-  };
-
-  isHealed = async () => {
-    const user = this.state.user;
-    const formData = this.state.formData;
-    console.log(this.state.formData);
-    for (let i = 0; i < user.length; i++) {
-      const id = this.state.user[i].id;
-      console.log(id);
-      const regainHp = await update(id, formData);
-    }
-    this.props.history.push("/start");
   };
 
   render() {
@@ -74,9 +54,6 @@ class Pokecenter extends Component {
           )}
         </div>
         <button onClick={() => this.heal()}>HEAL</button>
-        {this.state.isClicked && (
-          <button onClick={() => this.isHealed()}>OK</button>
-        )}
       </div>
     );
   }

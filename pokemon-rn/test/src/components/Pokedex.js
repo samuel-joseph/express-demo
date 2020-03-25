@@ -15,16 +15,16 @@ export default class Pokedex extends Component {
     const pokemons = await getAllPokemon();
     this.setState({ pokemons });
 
-    let string =
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/104.png";
+    // let string =
+    //   "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/104.png";
 
-    let test = string.match(/\d+/g).map(Number);
-    test++;
-    console.log(
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" +
-        test +
-        ".png"
-    );
+    // let test = string.match(/\d+/g).map(Number);
+    // test++;
+    // console.log(
+    //   "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" +
+    //     test +
+    //     ".png"
+    // );
   };
 
   render() {

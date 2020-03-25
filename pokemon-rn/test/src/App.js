@@ -97,8 +97,13 @@ class App extends Component {
     return (
       <div className="App">
         <div>
-          {localStorage.getItem("id") && <Link to="/trainer">Profile</Link>}
-          {localStorage.getItem("id") && <Link to="/forest">Forest</Link>}
+          {localStorage.getItem("id") && (
+            <>
+              <Link to="/trainer">Profile</Link>
+              <Link to="/forest">Forest</Link>
+              <Link to="/pokecenter">Pokecenter</Link>
+            </>
+          )}
           <Link to="/pokemons/pokedex">Pokedex</Link>
           {!this.state.currentUser && (
             <Link to="/users/register">Register</Link>

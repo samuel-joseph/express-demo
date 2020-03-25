@@ -8,7 +8,8 @@ import {
   storePokemon,
   addMoves,
   ownedPokemon,
-  getPokemon
+  getPokemon,
+  removeMove
 } from "../services/api_helper";
 
 import Level from "./Level";
@@ -47,14 +48,16 @@ class Battle extends Component {
     const npcAttack = await getMoves(npc.id);
     const userPokemonAttacks = await getMoves(fighterPokemon.id);
     const name = npc.name;
+    const current_experience = npc.current_experience;
+    const total_experience = npc.total_experience;
+    const level = npc.level;
     const frontImage = npc.frontImage;
     const backImage = npc.backImage;
     const health = npc.health;
+    const fullyEvolved = npc.fullyEvolved;
     const moveName = npcAttack.name;
     const moveAttack = npcAttack.attack;
     const current_health = fighterPokemon.current_health;
-
-    console.log(userPokemon);
 
     this.setState({
       npc,
@@ -66,7 +69,11 @@ class Battle extends Component {
         name,
         frontImage,
         backImage,
-        health
+        health,
+        level,
+        total_experience,
+        current_experience,
+        fullyEvolved
       },
       formData: {
         current_health
@@ -90,6 +97,78 @@ class Battle extends Component {
     return response;
   }
 
+  newMoves = async (moves, id) => {
+    console.log(moves);
+    let postMoveCopy = {
+      name: moves.name,
+      attack: moves.attack,
+      isLearned: moves.isLearned
+    };
+
+    let resp = await addMoves(id, postMoveCopy);
+
+    console.log(postMoveCopy);
+  };
+
+  evolution = async () => {
+    let userHealth = this.state.fighterPokemon.current_health;
+    let fullyEvolved = this.state.fighterPokemon.fullyEvolved;
+    let id = this.state.fighterPokemon.id;
+    let total_experience = this.state.fighterPokemon.total_experience;
+    let current_experience = this.state.fighterPokemon.current_experience;
+    let level = this.state.fighterPokemon.level;
+    let health = this.state.fighterPokemon.health;
+    let frontImage = this.state.fighterPokemon.frontImage;
+    let backImage = this.state.fighterPokemon.backImage;
+    let num = frontImage.match(/\d+/g).map(Number);
+
+    current_experience = current_experience + (total_experience * 1.5) / level;
+    current_experience = current_experience + 300;
+
+    if (level < 100) {
+      if (current_experience >= total_experience) {
+        level++;
+        health += 2;
+        current_experience = 0;
+        if (level === 2 && fullyEvolved === false) {
+          num++;
+          frontImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${num}.png`;
+          backImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon//back/${num}.png`;
+          let resp = await getMoves(num);
+          let del = await getMoves(id);
+          for (let i = 0; i < del.length; i++) {
+            await removeMove(id, del[i].id);
+          }
+          for (let i = 0; i < resp.length; i++) {
+            this.newMoves(resp[i], id);
+          }
+        } else if (level === 30 && fullyEvolved === false) {
+          num++;
+          frontImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${num}.png`;
+          backImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon//back/${num}.png`;
+          fullyEvolved = true;
+          let resp = await getMoves(num);
+          let del = await getMoves(id);
+          for (let i = 0; i < del.length; i++) {
+            await removeMove(id, del[i].id);
+          }
+          for (let i = 0; i < resp.length; i++) {
+            this.newMoves(resp[i], id);
+          }
+        }
+      }
+    }
+    const passData = {
+      health,
+      current_health: userHealth,
+      level,
+      current_experience,
+      frontImage,
+      backImage
+    };
+    const resp = await update(id, passData);
+  };
+
   battleSequence = async () => {
     let index = null;
     for (let i = 0; i < this.state.userPokemon.length; i++) {
@@ -97,7 +176,6 @@ class Battle extends Component {
         index = i;
       }
     }
-    console.log(index);
     let formData = this.state.formData;
     let id = this.state.fighterPokemon.id;
     let npcHealth = this.state.npc.current_health;
@@ -133,32 +211,14 @@ class Battle extends Component {
       const resp = await update(id, passData);
       this.props.history.push("/pokecenter");
     } else if (npcHealth < 0 || npcHealth === 0) {
-      let total_experience = this.state.fighterPokemon.total_experience;
-      let current_experience = this.state.fighterPokemon.current_experience;
-      let level = this.state.fighterPokemon.level;
-      current_experience = current_experience + total_experience / level;
-
-      if (current_experience >= total_experience) {
-        level++;
-        current_experience = 0;
-      }
-      const passData = {
-        current_health: userHealth,
-        level,
-        current_experience
-      };
-
       this.setState({
         npc: { ...this.state.npc, current_health: 0 },
         formData: { ...this.state.formData, current_health: userHealth }
       });
 
-      const resp = await update(id, passData);
+      this.evolution();
       this.props.history.push("/pokecenter");
     } else if (userHealth < 0 || userHealth === 0) {
-      const passData = {
-        current_health: 0
-      };
       const userPokemon = this.state.userPokemon;
       userPokemon.splice(index, 1);
       const fighterPokemon = userPokemon[0];
@@ -168,7 +228,7 @@ class Battle extends Component {
         formData: { ...this.state.formData, current_health: 0 },
         win: true
       });
-      const resp = await update(id, passData);
+      this.props.history.push("/start");
     } else {
       this.setState({
         fighterPokemon: {

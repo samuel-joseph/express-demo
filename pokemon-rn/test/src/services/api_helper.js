@@ -67,6 +67,7 @@ export const trainerPokemon = async () => {
 
 export const getMoves = async id => {
   let resp = await api.get(`/pokemons/${id}/moves`);
+  console.log("GET MOVE");
   return resp.data.moves;
 };
 
@@ -77,16 +78,13 @@ export const ownedPokemon = async id => {
 };
 
 export const addMoves = async (id, moveData) => {
-  console.log(moveData);
-  console.log(id);
   let resp = await api.post(`/pokemons/${id}/moves`, moveData);
-  console.log(resp);
+  console.log("MOVE ADDED");
   return resp;
 };
 
 export const getPokemon = async id => {
   const resp = await api.get(`/pokemons/${id}`);
-  // console.log(resp);
   return resp.data.pokemon;
 };
 
@@ -98,5 +96,13 @@ export const update = async (id, postData) => {
 
 export const remove = async id => {
   const resp = await api.delete(`/pokemons/${id}`);
+  return;
+};
+
+export const removeMove = async (pokemonId, moveId) => {
+  console.log(pokemonId);
+  console.log(moveId);
+  const resp = await api.delete(`/pokemons/${pokemonId}/moves/${moveId}`);
+  console.log("MOVE REMOVED");
   return;
 };
