@@ -21,6 +21,8 @@ class Battle extends Component {
 
     this.state = {
       npc: [],
+      npcAnimation: null,
+      userAnimation: null,
       postData: {
         name: null,
         frontImage: null,
@@ -47,6 +49,7 @@ class Battle extends Component {
     const fighterPokemon = userPokemon[0];
     const npcAttack = await getMoves(npc.id);
     const userPokemonAttacks = await getMoves(fighterPokemon.id);
+    console.log(userPokemonAttacks);
     const name = npc.name;
     const current_experience = npc.current_experience;
     const total_experience = npc.total_experience;
@@ -182,10 +185,32 @@ class Battle extends Component {
     let halfHp = this.state.npc.health / 2;
     let randomNpcAttack = this.randomFunc(this.state.npcAttack);
     let npcAttack = randomNpcAttack.attack;
+    let npcAnimation = randomNpcAttack.animation;
 
     let userHealth = this.state.fighterPokemon.current_health;
     let randomUserAttack = this.randomFunc(this.state.userPokemonAttacks);
     let userAttack = randomUserAttack.attack;
+    let userAnimation = randomUserAttack.animation;
+
+    this.setState({ npcAnimation });
+    setTimeout(
+      function() {
+        this.setState({ npcAnimation: null });
+      }.bind(this),
+      1000
+    );
+    setTimeout(
+      function() {
+        this.setState({ userAnimation });
+      }.bind(this),
+      1000
+    );
+    setTimeout(
+      function() {
+        this.setState({ userAnimation: null });
+      }.bind(this),
+      2000
+    );
 
     npcHealth = npcHealth - userAttack;
     userHealth = userHealth - npcAttack;
@@ -306,6 +331,10 @@ class Battle extends Component {
           <div>
             <div>
               <div>
+                {this.state.userAnimation && (
+                  <img src={this.state.userAnimation} />
+                )}
+
                 {this.state.catch ? (
                   <img src="https://pngimage.net/wp-content/uploads/2018/06/pokeball-pixel-png-8.png" />
                 ) : (
@@ -333,6 +362,7 @@ class Battle extends Component {
             </div>
             <button onClick={() => this.battleSequence()}>FIGHT</button>
             <div>
+              {this.state.npcAnimation && <img src={this.state.npcAnimation} />}
               <img src={this.state.fighterPokemon.backImage} />
               <div>
                 <p>{this.state.fighterPokemon.name}</p>

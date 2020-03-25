@@ -36,7 +36,7 @@ class ChooseStarter extends Component {
         level: 1,
         total_experience: 300,
         current_experience: 0,
-        fullyEvolved: false
+        fullyEvolved: null
       },
       isClicked: false
     };
@@ -63,14 +63,16 @@ class ChooseStarter extends Component {
       moveData1: {
         ...this.state.moveData,
         name: moves[0].name,
-        attack: moves[0].attack
+        attack: moves[0].attack,
+        animation: moves[0].animation
       }
     });
     this.setState({
       moveData2: {
         ...this.state.moveData,
         name: moves[1].name,
-        attack: moves[1].attack
+        attack: moves[1].attack,
+        animation: moves[1].animation
       }
     });
     this.setState({
@@ -96,12 +98,14 @@ class ChooseStarter extends Component {
       moveData1: {
         ...this.state.moveData1,
         name: moves[0].name,
-        attack: moves[0].attack
+        attack: moves[0].attack,
+        animation: moves[0].animation
       },
       moveData2: {
         ...this.state.moveData2,
         name: moves[1].name,
-        attack: moves[1].attack
+        attack: moves[1].attack,
+        animation: moves[1].animation
       }
     });
   };

@@ -24,7 +24,7 @@ class Pokecenter extends Component {
   componentDidMount = async () => {
     const user = await trainerPokemon();
     this.setState({ user });
-    console.log(user);
+    console.log(user);    
   };
 
   heal = async () => {
