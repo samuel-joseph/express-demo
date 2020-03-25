@@ -211,11 +211,15 @@ class Battle extends Component {
       const resp = await update(id, passData);
       this.props.history.push("/pokecenter");
     } else if (npcHealth < 0 || npcHealth === 0) {
+      const passData = {
+        current_health: userHealth
+      };
       this.setState({
         npc: { ...this.state.npc, current_health: 0 },
         formData: { ...this.state.formData, current_health: userHealth }
       });
 
+      const resp = await update(id, passData);
       this.evolution();
       this.props.history.push("/pokecenter");
     } else if (userHealth < 0 || userHealth === 0) {

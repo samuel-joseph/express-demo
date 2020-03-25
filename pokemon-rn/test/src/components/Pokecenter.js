@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import { Link, Route, withRouter } from "react-router-dom";
-import { update, trainerPokemon } from "../services/api_helper";
+import {
+  update,
+  trainerPokemon,
+  ownedPokemon,
+  getPokemon
+} from "../services/api_helper";
 
 class Pokecenter extends Component {
   constructor(props) {
@@ -8,6 +13,7 @@ class Pokecenter extends Component {
 
     this.state = {
       user: null,
+      pokemon: [],
       formData: {
         current_health: null
       },
@@ -17,12 +23,12 @@ class Pokecenter extends Component {
 
   componentDidMount = async () => {
     const user = await trainerPokemon();
+    this.setState({ user });
     console.log(user);
   };
 
   heal = async () => {
     const user = this.state.user;
-
     for (let i = 0; i < user.length; i++) {
       let id = user[i].id;
       let fullHp = user[i].health;
@@ -30,30 +36,50 @@ class Pokecenter extends Component {
         current_health: fullHp
       };
       const regainHp = await update(id, passData);
-      this.setState({ isClicked: true });
-      this.props.history.push("/start");
     }
+    this.setState({ isClicked: true });
+  };
+
+  show = async id => {
+    const pokemon = [];
+    const resp = await getPokemon(id);
+    pokemon.push(resp);
+    console.log(pokemon);
+    this.setState({ pokemon });
   };
 
   render() {
     return (
       <div>
-        {this.state.user && <>{console.log(this.state.formData)}</>}
         <div>
           {this.state.user && (
             <>
               {this.state.user.map(data => (
                 <div>
-                  <img src={data.frontImage} />
-                  <div>
-                    {data.current_health}/{data.health}
-                  </div>
+                  <img
+                    onClick={() => this.show(data.id)}
+                    src="https://pngimage.net/wp-content/uploads/2018/06/pokeball-pixel-png-8.png"
+                  />
                 </div>
               ))}
             </>
           )}
         </div>
-        <button onClick={() => this.heal()}>HEAL</button>
+        {!this.state.isClicked && (
+          <button onClick={() => this.heal()}>HEAL</button>
+        )}
+        {this.state.pokemon && (
+          <>
+            {this.state.pokemon.map(data => (
+              <div>
+                <img src={data.frontImage} />
+                <div>
+                  {data.current_health}/{data.health}
+                </div>
+              </div>
+            ))}
+          </>
+        )}
       </div>
     );
   }
