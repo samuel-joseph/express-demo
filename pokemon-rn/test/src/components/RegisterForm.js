@@ -22,8 +22,7 @@ export default class RegisterForm extends Component {
       <div className="form">
         {this.props.errorText && <p>{this.props.errorText}</p>}
         <form onSubmit={e => this.props.handleRegister(e, this.state)}>
-          <h2>Register!</h2>
-          <label htmlFor="name">username</label>
+          <label htmlFor="name">TRAINERNAME</label>
           <input
             type="text"
             name="username"
@@ -32,7 +31,7 @@ export default class RegisterForm extends Component {
             onChange={this.handleChange}
           />
 
-          <label htmlFor="password">password</label>
+          <label htmlFor="password">PASSWORD</label>
           <input
             type="password"
             name="password"
@@ -40,7 +39,7 @@ export default class RegisterForm extends Component {
             value={this.state.password}
             onChange={this.handleChange}
           />
-          <button className="submit">Submit!</button>
+          <button className="submit">SUBMIT</button>
         </form>
       </div>
     );

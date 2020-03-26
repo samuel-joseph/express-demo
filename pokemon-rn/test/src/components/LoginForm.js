@@ -23,8 +23,7 @@ class LoginForm extends Component {
     return (
       <div className="form">
         <form onSubmit={e => this.props.handleLogin(e, this.state)}>
-          <h2>Login!</h2>
-          <label htmlFor="username">Trainername</label>
+          <label htmlFor="username">TRAINERNAME</label>
           <input
             className="label"
             type="text"
@@ -32,7 +31,7 @@ class LoginForm extends Component {
             value={this.state.username}
             onChange={this.handleChange}
           />
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">PASSWORD</label>
           <input
             className="label"
             type="password"
@@ -40,7 +39,7 @@ class LoginForm extends Component {
             value={this.state.password}
             onChange={this.handleChange}
           />
-          <button className="submit">Submit</button>
+          <button className="submit">SUBMIT</button>
         </form>
       </div>
     );

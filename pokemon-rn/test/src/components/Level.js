@@ -13,7 +13,6 @@ class Level extends Component {
 
   componentDidMount = async () => {
     const pokemon = await trainerPokemon();
-    console.log(pokemon);
   };
 
   render() {
