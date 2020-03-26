@@ -122,28 +122,32 @@ class ChooseStarter extends Component {
   render() {
     return (
       <div>
-        {console.log(this.state.arrayMoveData)}
         {this.state.starters && (
           <div>
             {this.state.isClicked && (
-              <div>
-                <h4>{this.state.formData.name}</h4>
+              <div className="choose">
                 <img className="pokemon" src={this.state.formData.frontImage} />
+                <p>{this.state.formData.name}</p>
               </div>
             )}
-            {this.state.starters.map((pokemon, index) => (
-              <div key={index}>
-                <img
-                  className="pokeball"
-                  onClick={() =>
-                    this.chosenPokemon(pokemon, this.state.starterMoves[index])
-                  }
-                  src="https://pngimage.net/wp-content/uploads/2018/06/pokeball-pixel-png-8.png"
-                />
-              </div>
-            ))}
+            <div className="setPokeball">
+              {this.state.starters.map((pokemon, index) => (
+                <div key={index}>
+                  <img
+                    className="pokeball"
+                    onClick={() =>
+                      this.chosenPokemon(
+                        pokemon,
+                        this.state.starterMoves[index]
+                      )
+                    }
+                    src="https://pngimage.net/wp-content/uploads/2018/06/pokeball-pixel-png-8.png"
+                  />
+                </div>
+              ))}
+            </div>
             {this.state.isClicked && (
-              <button onClick={() => this.savePokemon()}>OK</button>
+              <button className="register" onClick={() => this.savePokemon()}>CONFIRM</button>
             )}
           </div>
         )}

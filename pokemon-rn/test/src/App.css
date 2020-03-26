@@ -31,7 +31,7 @@ img {
 }
 
 .pokemon {
-  width: 10vw;
+  width: 50vw;
 }
 
 .label {
@@ -49,5 +49,20 @@ img {
   background-color: red;
   color: white;
   font-size: 12pt;
+  font-weight: bold;
+}
+
+.setPokeball {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+
+.pokeball {
+  width: 100%;
+}
+
+p {
   font-weight: bold;
 }

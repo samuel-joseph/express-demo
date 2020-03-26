@@ -93,6 +93,7 @@ class App extends Component {
     localStorage.removeItem("name");
     localStorage.removeItem("username");
     localStorage.removeItem("id");
+    this.props.history.push("/");
   };
 
   turnOn = () => {
@@ -103,56 +104,42 @@ class App extends Component {
     return (
       <div className="App">
         <div>
-          {localStorage.getItem("id") && (
-            <>
-              <Link to="/trainer">Profile</Link>
-              <Link to="/forest">Forest</Link>
-              <Link to="/pokecenter">Pokecenter</Link>
-              <Link to="/league">League</Link>
-            </>
-          )}
-
-          {/* <Link to="/pokemons/pokedex">Pokedex</Link> */}
-          {!this.state.isClicked && (
-            <>
-              {!this.state.currentUser && (
-                <div className="opening">
-                  <h2>POKEMON LEAGUE</h2>
-                  <div className="buttonsOpenning">
-                    <Link className="register" to="/users/register">
-                      REGISTER
-                    </Link>
-                    <Route
-                      path="/users/register"
-                      render={() => (
-                        <RegisterForm
-                          handleRegister={this.handleRegister}
-                          isClicked={this.state.isClicked}
-                        />
-                      )}
+          {!this.state.currentUser && (
+            <div className="opening">
+              <h2>POKEMON LEAGUE</h2>
+              <div className="buttonsOpenning">
+                <Link className="register" to="/users/register">
+                  REGISTER
+                </Link>
+                <Route
+                  path="/users/register"
+                  render={() => (
+                    <RegisterForm
+                      handleRegister={this.handleRegister}
+                      isClicked={this.state.isClicked}
                     />
-                    <Link className="register" to="/users/login">
-                      LOGIN
-                    </Link>
-                    <Route
-                      path="/users/login"
-                      render={() => (
-                        <LoginForm
-                          isClicked={this.state.isClicked}
-                          handleLogin={this.handleLogin}
-                        />
-                      )}
+                  )}
+                />
+                <Link className="register" to="/users/login">
+                  LOGIN
+                </Link>
+                <Route
+                  path="/users/login"
+                  render={() => (
+                    <LoginForm
+                      isClicked={this.state.isClicked}
+                      handleLogin={this.handleLogin}
                     />
-                  </div>
-                </div>
-              )}
-            </>
+                  )}
+                />
+              </div>
+            </div>
           )}
           {this.state.currentUser && (
             <button onClick={() => this.handleLogout()}>Logout</button>
           )}
         </div>
-        {this.state.currentUser && <h1> {this.state.currentUser.username}</h1>}
+  
         <div>
           <Route path="/league" render={() => <League />} />
           <Route path="/forest" render={() => <Forest />} />
