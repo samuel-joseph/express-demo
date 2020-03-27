@@ -26,7 +26,15 @@ class StartGame extends Component {
   };
 
   render() {
-    return <div>{this.state.pokemons ? <Trainer /> : <ChooseStarter />}</div>;
+    return (
+      <div>
+        {this.state.pokemons ? (
+          <Trainer />
+        ) : (
+          <ChooseStarter saySomething={e => this.props.saySomething(e)} />
+        )}
+      </div>
+    );
   }
 }
 

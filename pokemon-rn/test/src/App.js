@@ -10,6 +10,8 @@ import {
 } from "./services/api_helper";
 import { Link, Route, withRouter } from "react-router-dom";
 
+import { IoMdLogOut } from "react-icons/fa";
+
 import Forest from "./components/Forest";
 import Pokedex from "./components/Pokedex";
 import RegisterForm from "./components/RegisterForm";
@@ -31,7 +33,8 @@ class App extends Component {
         password: null
       },
       pokemons: null,
-      isClicked: false
+      isClicked: false,
+      instruction: null
     };
   }
 
@@ -100,6 +103,10 @@ class App extends Component {
     this.setState({ isClicked: true });
   };
 
+  saySomethhing = instruction => {
+    this.setState({ instruction });
+  };
+
   render() {
     return (
       <div className="App">
@@ -136,19 +143,49 @@ class App extends Component {
             </div>
           )}
           {this.state.currentUser && (
-            <button onClick={() => this.handleLogout()}>Logout</button>
+            <div className="header">
+              <img
+                className="home"
+                src="https://www.nicepng.com/png/detail/15-158271_pokeball-icon.png"
+              />
+              <p className="title">POKEMON LEAGUE</p>
+              <img
+                className="logout"
+                src="https://cdn2.iconfinder.com/data/icons/e-commerce-line-10-1/1024/logout10-512.png"
+                onClick={() => this.handleLogout()}
+              />
+            </div>
           )}
         </div>
-  
+
         <div>
           <Route path="/league" render={() => <League />} />
           <Route path="/forest" render={() => <Forest />} />
-          <Route path="/start" render={() => <StartGame />} />
+          <Route
+            path="/start"
+            render={() => (
+              <StartGame
+                saySomething={e => this.saySomethhing(e)}
+                instruction={this.state.instruction}
+              />
+            )}
+          />
 
           <Route path="/pokemons/pokedex" render={() => <Pokedex />} />
           <Route path="/trainer" render={() => <Trainer />} />
           <Route path="/pokecenter" render={() => <Pokecenter />} />
         </div>
+        <>
+          {this.state.currentUser && (
+            <>
+              {this.state.instruction && (
+                <div className="footer">
+                  <p>{this.state.instruction}</p>
+                </div>
+              )}
+            </>
+          )}
+        </>
       </div>
     );
   }

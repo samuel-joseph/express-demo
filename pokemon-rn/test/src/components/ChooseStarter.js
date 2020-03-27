@@ -52,6 +52,7 @@ class ChooseStarter extends Component {
       starters.push(resp);
       starterMoves.push(resp1);
     }
+    this.props.saySomething("Choose a starter pokemon");
     this.setState({ starters, starterMoves });
   };
 
@@ -121,11 +122,11 @@ class ChooseStarter extends Component {
 
   render() {
     return (
-      <div>
+      <div className="choose">
         {this.state.starters && (
           <div>
             {this.state.isClicked && (
-              <div className="choose">
+              <div>
                 <img className="pokemon" src={this.state.formData.frontImage} />
                 <p>{this.state.formData.name}</p>
               </div>
@@ -141,13 +142,15 @@ class ChooseStarter extends Component {
                         this.state.starterMoves[index]
                       )
                     }
-                    src="https://pngimage.net/wp-content/uploads/2018/06/pokeball-pixel-png-8.png"
+                    src="https://purepng.com/public/uploads/medium/purepng.com-pokeballpokeballdevicepokemon-ballpokemon-capture-ball-1701527825795vtfp2.png"
                   />
                 </div>
               ))}
             </div>
             {this.state.isClicked && (
-              <button className="register" onClick={() => this.savePokemon()}>CONFIRM</button>
+              <button className="register" onClick={() => this.savePokemon()}>
+                CONFIRM
+              </button>
             )}
           </div>
         )}
