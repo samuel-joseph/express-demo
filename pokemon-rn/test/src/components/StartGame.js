@@ -5,6 +5,7 @@ import { trainerPokemon, ownedPokemon } from "../services/api_helper";
 
 import ChooseStarter from "./ChooseStarter";
 import Trainer from "./Trainer";
+import Menu from "./Menu";
 
 class StartGame extends Component {
   constructor(props) {
@@ -18,7 +19,6 @@ class StartGame extends Component {
   }
 
   componentDidMount = async () => {
-    console.log("This is StartGame component");
     const pokemons = await ownedPokemon(localStorage.getItem("id"));
     if (pokemons.pokemon.length !== 0) {
       this.setState({ pokemons });
@@ -29,7 +29,7 @@ class StartGame extends Component {
     return (
       <div>
         {this.state.pokemons ? (
-          <Trainer />
+          <Menu saySomething={e => this.props.saySomething(e)} />
         ) : (
           <ChooseStarter saySomething={e => this.props.saySomething(e)} />
         )}

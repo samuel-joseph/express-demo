@@ -36,10 +36,13 @@ class Battle extends Component {
       userPokemonAttacks: null,
       fighterPokemon: [],
       catch: false,
+      change: false,
       formData: {
         current_health: null
       },
-      win: false
+      win: false,
+      npcTurn: false,
+      userTurn: false
     };
   }
 
@@ -179,6 +182,7 @@ class Battle extends Component {
         index = i;
       }
     }
+
     let formData = this.state.formData;
     let id = this.state.fighterPokemon.id;
     let npcHealth = this.state.npc.current_health;
@@ -192,22 +196,22 @@ class Battle extends Component {
     let userAttack = randomUserAttack.attack;
     let userAnimation = randomUserAttack.animation;
 
-    this.setState({ npcAnimation });
+    this.setState({ userAnimation, userTurn: true });
     setTimeout(
       function() {
-        this.setState({ npcAnimation: null });
+        this.setState({ userAnimation: null, userTurn: false });
       }.bind(this),
       1000
     );
     setTimeout(
       function() {
-        this.setState({ userAnimation });
+        this.setState({ npcAnimation, npcTurn: true });
       }.bind(this),
       1000
     );
     setTimeout(
       function() {
-        this.setState({ userAnimation: null });
+        this.setState({ npcAnimation: null, npcTurn: false });
       }.bind(this),
       2000
     );
@@ -259,14 +263,23 @@ class Battle extends Component {
       });
       this.props.history.push("/start");
     } else {
-      this.setState({
-        fighterPokemon: {
-          ...this.state.fighterPokemon,
-          current_health: userHealth
-        },
-        formData: { ...this.state.formData, current_health: userHealth },
-        npc: { ...this.state.npc, current_health: npcHealth }
-      });
+      const passData = {
+        current_health: userHealth
+      };
+      setTimeout(
+        function() {
+          this.setState({
+            fighterPokemon: {
+              ...this.state.fighterPokemon,
+              current_health: userHealth
+            },
+            formData: { ...this.state.formData, current_health: userHealth },
+            npc: { ...this.state.npc, current_health: npcHealth }
+          });
+        }.bind(this),
+        2500
+      );
+      const resp = await update(id, passData);
     }
   };
 
@@ -308,18 +321,62 @@ class Battle extends Component {
     const fighterPokemonID = this.state.fighterPokemon.id;
     const formData = this.state.formData;
     const id = pokemon.id;
-    const userPokemonAttacks = await getMoves(id);
+    let randomNpcAttack = this.randomFunc(this.state.npcAttack);
+    let npcAttack = randomNpcAttack.attack;
+    let npcAnimation = randomNpcAttack.animation;
+    setTimeout(
+      function() {
+        this.setState({ npcAnimation, npcTurn: true });
+      }.bind(this),
+      1000
+    );
+    setTimeout(
+      function() {
+        this.setState({ npcAnimation: null, npcTurn: false });
+      }.bind(this),
+      2000
+    );
+
+    // setTimeout(
+    //   function() {
+    //     this.setState({
+    //       fighterPokemon: {
+    //         ...this.state.fighterPokemon,
+    //         current_health: userHealth
+    //       },
+    //       formData: { ...this.state.formData, current_health: userHealth }
+    //     });
+    //   }.bind(this),
+    //   2500
+    // );
+
+    const changedPokemon = await getPokemon(id);
+    let userHealth = changedPokemon.current_health;
+    userHealth = userHealth - npcAttack;
+    const passData = {
+      current_health: userHealth
+    };
+    const resp = await update(id, passData);
     const fighterPokemon = await getPokemon(id);
-    const resp = await update(fighterPokemonID, formData);
+
+    console.log(userHealth);
     console.log(fighterPokemon.current_health);
 
-    this.setState({
-      fighterPokemon,
-      userPokemonAttacks,
-      formData: {
-        current_health: fighterPokemon.current_health
-      }
-    });
+    const resp1 = await update(fighterPokemonID, formData);
+
+    const userPokemonAttacks = await getMoves(id);
+    setTimeout(
+      function() {
+        this.setState({
+          fighterPokemon,
+          userPokemonAttacks,
+          formData: {
+            current_health: userHealth
+          }
+        });
+      }.bind(this),
+      2500
+    );
   };
 
   render() {
@@ -329,78 +386,69 @@ class Battle extends Component {
           <Pokecenter win={this.state.win} />
         ) : (
           <div>
-            <div>
+            <div className="npc">
               <div>
                 {this.state.userAnimation && (
-                  <img src={this.state.userAnimation} />
+                  <img className="userFX" src={this.state.userAnimation} />
                 )}
 
-                {this.state.catch ? (
-                  <img src="https://pngimage.net/wp-content/uploads/2018/06/pokeball-pixel-png-8.png" />
-                ) : (
-                  <img className="pokemon" src={this.state.npc.frontImage} />
-                )}
-              </div>
-              <div>
-                <p>{this.state.npc.name}</p>
-                <p>
-                  {this.state.npc.current_health}/{this.state.npc.health}
-                </p>
-              </div>
-              <div>
-                {this.state.npcAttack && (
-                  <>
-                    {this.state.npcAttack.map(data => (
-                      <div>
-                        {data.name}
-                        {data.attack}
-                      </div>
-                    ))}
-                  </>
-                )}
+                <div>
+                  <div className="npcA">
+                    <div className="npcB">
+                      <span>{this.state.npc.name}</span>
+                      {this.state.npc.current_health}/{this.state.npc.health}
+                    </div>
+                    <div>
+                      <img
+                        className={
+                          this.state.npcTurn ? "npcMove" : "npcPokemon"
+                        }
+                        src={
+                          this.state.catch
+                            ? "https://i.gifer.com/origin/28/2860d2d8c3a1e402e0fc8913cd92cd7a_w200.gif"
+                            : this.state.npc.frontImage
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <button onClick={() => this.battleSequence()}>FIGHT</button>
             <div>
-              {this.state.npcAnimation && <img src={this.state.npcAnimation} />}
-              <img
-                className="pokemon"
-                src={this.state.fighterPokemon.backImage}
-              />
-              <div>
-                <p>{this.state.fighterPokemon.name}</p>
-                <p>
+              <div className="userA">
+                <div>
+                  {this.state.npcAnimation && (
+                    <img className="npcFX" src={this.state.npcAnimation} />
+                  )}
+                  <img
+                    className={this.state.userTurn ? "userMove" : "userPokemon"}
+                    src={this.state.fighterPokemon.backImage}
+                  />
+                </div>
+                <div className="userB">
+                  <span>{this.state.fighterPokemon.name}</span>
                   {this.state.fighterPokemon.current_health}/
                   {this.state.fighterPokemon.health}
-                </p>
+                </div>
               </div>
-            </div>
-            <div>
-              {this.state.userPokemonAttacks && (
-                <>
-                  {this.state.userPokemonAttacks.map(data => (
-                    <div>
-                      {data.name}:{data.attack}
-                    </div>
-                  ))}
-                </>
-              )}
             </div>
           </div>
         )}
-        {this.state.userPokemon && (
-          <>
-            {this.state.userPokemon.length <= 6 && (
-              <img
-                onClick={() => this.readyCatch()}
-                src="https://pngimage.net/wp-content/uploads/2018/06/pokeball-pixel-png-8.png"
-              />
-            )}
-          </>
-        )}
-        <div>
+
+        <>
           {this.state.userPokemon && (
-            <>
+            <div className="sparePokemons">
+              {this.state.userPokemon && (
+                <>
+                  {this.state.userPokemon.length <= 6 && (
+                    <img
+                      onClick={() => this.readyCatch()}
+                      src="https://pngimage.net/wp-content/uploads/2018/06/pokeball-pixel-png-8.png"
+                    />
+                  )}
+                </>
+              )}
               {this.state.userPokemon.map((data, index) => (
                 <div key={index}>
                   <img
@@ -409,9 +457,9 @@ class Battle extends Component {
                   />
                 </div>
               ))}
-            </>
+            </div>
           )}
-        </div>
+        </>
       </div>
     );
   }

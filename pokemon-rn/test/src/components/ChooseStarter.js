@@ -52,13 +52,15 @@ class ChooseStarter extends Component {
       starters.push(resp);
       starterMoves.push(resp1);
     }
-    this.props.saySomething("Choose a starter pokemon");
+    // this.props.saySomething("Choose a starter pokemon");
     this.setState({ starters, starterMoves });
   };
 
   chosenPokemon = (pokemon, moves) => {
     const chosenPokemonId = pokemon.id;
     const starterMoves = [];
+
+    this.props.saySomething(" ");
 
     this.setState({
       moveData1: {
@@ -122,11 +124,11 @@ class ChooseStarter extends Component {
 
   render() {
     return (
-      <div className="choose">
+      <div>
         {this.state.starters && (
           <div>
             {this.state.isClicked && (
-              <div>
+              <div className="choose">
                 <img className="pokemon" src={this.state.formData.frontImage} />
                 <p>{this.state.formData.name}</p>
               </div>

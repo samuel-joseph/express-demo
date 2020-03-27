@@ -108,7 +108,7 @@ class App extends Component {
     this.setState({ isClicked: true });
   };
 
-  saySomethhing = instruction => {
+  saySomething = instruction => {
     this.setState({ instruction });
   };
 
@@ -166,19 +166,28 @@ class App extends Component {
 
         <div className="main">
           <Route path="/league" render={() => <League />} />
-          <Route path="/forest" render={() => <Forest />} />
+          <Route
+            path="/forest"
+            render={() => <Forest saySomething={e => this.saySomething(e)} />}
+          />
           <Route
             path="/start"
             render={() => (
               <StartGame
-                saySomething={e => this.saySomethhing(e)}
+                saySomething={e => this.saySomething(e)}
                 instruction={this.state.instruction}
               />
             )}
           />
-          <Route path="/menu" render={() => <Menu />} />
+          <Route
+            path="/menu"
+            render={() => <Menu saySomething={e => this.saySomething(e)} />}
+          />
           <Route path="/pokemons/pokedex" render={() => <Pokedex />} />
-          <Route path="/trainer" render={() => <Trainer />} />
+          <Route
+            path="/trainer"
+            render={() => <Trainer saySomething={e => this.saySomething(e)} />}
+          />
           <Route path="/pokecenter" render={() => <Pokecenter />} />
         </div>
         <>

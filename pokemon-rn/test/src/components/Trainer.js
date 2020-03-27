@@ -19,6 +19,8 @@ class Trainer extends Component {
     if (pokemon.length === 0) {
       this.props.history.push("/start");
     }
+
+    this.props.saySomething("Press the pokemon image to see their move sets.");
     this.setState({ pokemon });
   };
 
@@ -53,16 +55,17 @@ class Trainer extends Component {
                 </p>
               </div>
             ))}
-            <div className="moveContainer">
-              {this.state.moves &&
-                this.state.moves.map(data => (
-                  <div>
-                    {data.name}:{data.attack}
-                  </div>
-                ))}
-            </div>
           </div>
         )}
+        <div className="moveContainer">
+          <h4>MOVE SET</h4>
+          {this.state.moves &&
+            this.state.moves.map(data => (
+                <span>
+                  {data.name}:{data.attack}
+                </span>
+            ))}
+        </div>
       </div>
     );
   }

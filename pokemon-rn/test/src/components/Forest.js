@@ -36,6 +36,12 @@ class Forest extends Component {
     };
   }
 
+  componentDidMount = () => {
+    this.props.saySomething(
+      " Choose any of the forest then press HUNT button to either catch a pokemon or just battle! HAPPY HUNTING!"
+    );
+  };
+
   resetMap = () => {
     const pokemons = "";
     this.setState({ pokemons });
@@ -64,22 +70,17 @@ class Forest extends Component {
 
   render() {
     return (
-      <div className="forest">
-        {!this.state.isClicked && (
-          <div className="box">
-            Choose any of the forest then press HUNT button to either catch a
-            pokemon or just battle! HAPPY HUNTING!
-          </div>
-        )}
+      <div>
         {this.state.proceed ? (
           <Battle pokemonID={this.state.chosenPokemon} />
         ) : (
           <>
             <div>
-              <div>
+              <div className="forest">
                 {this.state.routeMaps.map(data => (
                   <div className=".grass">
                     <img
+                      className="grassImg"
                       onClick={() => this.forestPokemons(data.arrayPokemons)}
                       src={data.image}
                     />
