@@ -112,3 +112,74 @@ p {
 .logout {
   width: 10vw;
 }
+
+.trainer {
+  padding-top: 10vh;
+  display: flex;
+  flex-direction: row;
+  width: 70vw;
+  justify-content: center;
+  overflow: scroll;
+}
+
+.typeA {
+  display: flex;
+  justify-content: center;
+}
+
+.moveContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.specificPokemon {
+  width: 100%;
+}
+
+.main {
+  /* background-color: gray; */
+  height: 70vh;
+  margin-top: 15vh;
+  overflow: scroll;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+  align-items: center;
+}
+
+.menuButton {
+  width: 100%;
+  font-size: 20pt;
+  text-decoration: none;
+  height: 10vh;
+  border: 2px solid black;
+  margin-top: 2px;
+}
+
+.grass {
+  display: flex;
+  flex-direction: row;
+  overflow: scroll;
+  height: 60vh;
+  width: 100%;
+}
+
+.pokemonContainer {
+  height: 33vh;
+  width: 100%;
+  /* background: black; */
+  overflow: scroll;
+}
+
+.box {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 5px 5px;
+  width: 90%;
+  height: 20%;
+  border: 2px solid;
+}

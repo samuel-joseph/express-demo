@@ -64,34 +64,44 @@ class Forest extends Component {
 
   render() {
     return (
-      <div>
+      <div className="forest">
+        {!this.state.isClicked && (
+          <div className="box">
+            Choose any of the forest then press HUNT button to either catch a
+            pokemon or just battle! HAPPY HUNTING!
+          </div>
+        )}
         {this.state.proceed ? (
           <Battle pokemonID={this.state.chosenPokemon} />
         ) : (
           <>
             <div>
-              {this.state.pokemons && (
-                <div>
-                  {this.state.pokemons.map(data => (
-                    <>
-                      <img src={data.frontImage} />
-                    </>
-                  ))}
-                </div>
-              )}
-              {this.state.routeMaps.map(data => (
-                <div>
-                  <img
-                    onClick={() => this.forestPokemons(data.arrayPokemons)}
-                    src={data.image}
-                  />
-                  <h5>{data.name}</h5>
-                </div>
-              ))}
+              <div>
+                {this.state.routeMaps.map(data => (
+                  <div className=".grass">
+                    <img
+                      onClick={() => this.forestPokemons(data.arrayPokemons)}
+                      src={data.image}
+                    />
+                    <h5>{data.name}</h5>
+                  </div>
+                ))}
+              </div>
             </div>
+            {this.state.pokemons && (
+              <div className="pokemonContainer">
+                {this.state.pokemons.map(data => (
+                  <div>
+                    <img className="pokemon" src={data.frontImage} />
+                  </div>
+                ))}
+              </div>
+            )}
             {this.state.isClicked && (
               <div>
-                <button onClick={() => this.battle()}>OK</button>
+                <button className="register" onClick={() => this.battle()}>
+                  CONFIRM
+                </button>
               </div>
             )}
           </>

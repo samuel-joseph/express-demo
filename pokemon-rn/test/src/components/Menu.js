@@ -1,13 +1,23 @@
-import react from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 function Menu() {
   return (
-    <div>
-      <Link to="/trainer">Profile</Link>
-      <Link to="/forest">Forest</Link>
-      <Link to="/pokecenter">Pokecenter</Link>
-      <Link to="/league">League</Link>
+    <div className="menu">
+      <Link className="menuButton" to="/trainer">
+        Profile
+      </Link>
+      <Link className="menuButton" to="/forest">
+        Forest
+      </Link>
+      <Link className="menuButton" to="/pokecenter">
+        Pokecenter
+      </Link>
+      <Link className="menuButton" to="/league">
+        League
+      </Link>
     </div>
   );
 }
+
+export default Menu;

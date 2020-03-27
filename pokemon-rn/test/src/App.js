@@ -20,6 +20,7 @@ import StartGame from "./components/StartGame";
 import Trainer from "./components/Trainer";
 import Pokecenter from "./components/Pokecenter";
 import League from "./components/League";
+import Menu from "./components/Menu";
 
 class App extends Component {
   constructor(props) {
@@ -99,6 +100,10 @@ class App extends Component {
     this.props.history.push("/");
   };
 
+  handleMenu = () => {
+    this.props.history.push("/menu");
+  };
+
   turnOn = () => {
     this.setState({ isClicked: true });
   };
@@ -147,6 +152,7 @@ class App extends Component {
               <img
                 className="home"
                 src="https://www.nicepng.com/png/detail/15-158271_pokeball-icon.png"
+                onClick={() => this.handleMenu()}
               />
               <p className="title">POKEMON LEAGUE</p>
               <img
@@ -158,7 +164,7 @@ class App extends Component {
           )}
         </div>
 
-        <div>
+        <div className="main">
           <Route path="/league" render={() => <League />} />
           <Route path="/forest" render={() => <Forest />} />
           <Route
@@ -170,7 +176,7 @@ class App extends Component {
               />
             )}
           />
-
+          <Route path="/menu" render={() => <Menu />} />
           <Route path="/pokemons/pokedex" render={() => <Pokedex />} />
           <Route path="/trainer" render={() => <Trainer />} />
           <Route path="/pokecenter" render={() => <Pokecenter />} />

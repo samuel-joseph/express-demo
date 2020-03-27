@@ -338,7 +338,7 @@ class Battle extends Component {
                 {this.state.catch ? (
                   <img src="https://pngimage.net/wp-content/uploads/2018/06/pokeball-pixel-png-8.png" />
                 ) : (
-                  <img src={this.state.npc.frontImage} />
+                  <img className="pokemon" src={this.state.npc.frontImage} />
                 )}
               </div>
               <div>
@@ -363,7 +363,10 @@ class Battle extends Component {
             <button onClick={() => this.battleSequence()}>FIGHT</button>
             <div>
               {this.state.npcAnimation && <img src={this.state.npcAnimation} />}
-              <img src={this.state.fighterPokemon.backImage} />
+              <img
+                className="pokemon"
+                src={this.state.fighterPokemon.backImage}
+              />
               <div>
                 <p>{this.state.fighterPokemon.name}</p>
                 <p>

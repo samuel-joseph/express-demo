@@ -30,28 +30,37 @@ class Trainer extends Component {
 
   render() {
     return (
-      <div>
+      <div className="typeA">
         {this.state.pokemon && (
-          <div>
+          <div className="trainer">
             {this.state.pokemon.map(data => (
-              <div>
-                <h4>{data.name}</h4>
-                <h5>{data.level}</h5>
+              <div className="specificPokemon">
                 <img
+                  className="pokemon"
                   src={data.frontImage}
                   onClick={() => this.showMoves(data.id)}
                 />
                 <p>
-                  {data.current_health}/{data.health}
+                  {data.name} Level {data.level}
+                </p>
+                <p>
+                  <div>
+                    HP: {data.current_health}/{data.health}
+                  </div>
+                  <div>
+                    EXP: {data.current_experience}/{data.total_experience}
+                  </div>
                 </p>
               </div>
             ))}
-            {this.state.moves &&
-              this.state.moves.map(data => (
-                <div>
-                  {data.name}:{data.attack}
-                </div>
-              ))}
+            <div className="moveContainer">
+              {this.state.moves &&
+                this.state.moves.map(data => (
+                  <div>
+                    {data.name}:{data.attack}
+                  </div>
+                ))}
+            </div>
           </div>
         )}
       </div>
