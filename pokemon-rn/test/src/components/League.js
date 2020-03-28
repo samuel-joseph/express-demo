@@ -1,12 +1,19 @@
 import React, { Component } from "react";
-import { Link, Route, withRouter } from "react-router-dom";
-import { getPokemon } from "../services/api_helper";
+import { getPokemon, trainerPokemon, getMoves } from "../services/api_helper";
+
+import MaxHealthBar from "./maxHealthBar";
 
 class League extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      user: null,
+      userPokemon: null,
+      userMoves: null,
+      npc: null,
+      npcPokemon: null,
+      npcMoves: null,
       gymLeader: [
         {
           name: "Brock",
@@ -83,44 +90,157 @@ class League extends Component {
         eliteFour: eliteFourCopy
       });
     }
+    const user = await trainerPokemon();
+    const userPokemon = user[0];
+    const userMoves = await getMoves(userPokemon.id);
+    // const npcPokemon = gymLeaderCopy[0];
+    // const npcMoves = await getMoves(npcPokemon.id);
+    this.setState({ user, userPokemon, userMoves });
   };
 
+  battleStart = async () => {
+    const npcContainer = this.state.gymLeader.shift();
+    const npc = npcContainer.pokemon;
+    const npcPokemon = npc.shift();
+    const npcMoves = await getMoves(npcPokemon.id);
+    console.log(npcPokemon);
+    console.log(npcPokemon);
+    this.setState({
+      npc,
+      npcPokemon,
+      npcMoves
+    });
+  };
 
   render() {
     return (
       <div>
-        {this.state.gymLeader && (
-          <>
-            <h1>GYM LEADER</h1>
-            {this.state.gymLeader.map(data => (
-              <div>
-                <h5>{data.name}</h5>
-                <div>
-                  {data.pokemon.map(pokemon => (
-                    <img src={pokemon.frontImage} />
-                  ))}
-                </div>
+        {this.state.npc && <>{console.log(this.state.npcPokemon.name)}</>}
+        <button onClick={() => this.battleStart()}>START</button>
+        {/* {this.state.npc && (
+          <div>
+            <img src={this.state.npcPokemon.frontImage} />
+          </div>
+        )} */}
+        {this.state.npcPokemon && (
+          <div className="npc">
+            {this.state.npc.map((data, index) => (
+              <div key={index}>
+                <img
+                  onClick={() => this.change(data)}
+                  src="https://purepng.com/public/uploads/medium/purepng.com-pokeballpokeballdevicepokemon-ballpokemon-capture-ball-1701527825795vtfp2.png"
+                />
               </div>
             ))}
-          </>
-        )}
-        {this.state.eliteFour && (
-          <>
-            <h1>Elite Four</h1>
-            {this.state.eliteFour.map(data => (
+            <div>
+              {/* {this.state.userAnimation && (
+                <img className="userFX" src={this.state.userAnimation} />
+              )} */}
+
               <div>
-                <h5>{data.name}</h5>
-                <div>
-                  {data.pokemon.map(pokemon => (
-                    <img src={pokemon.frontImage} />
-                  ))}
+                <div className="npcA">
+                  <div className="npcB">
+                    <span>{this.state.npcPokemon.name}</span>
+                    <MaxHealthBar
+                      percentage={this.state.npcPokemon.current_health}
+                    />
+                  </div>
+                  <div>
+                    {this.state.npcPokemon.current_health ? (
+                      <img
+                        className="npcPokemon"
+                        // className={
+                        //   this.state.npcTurn ? "npcMove" : "npcPokemon"
+                        // }
+                        src={this.state.npcPokemon.frontImage}
+                      />
+                    ) : (
+                      <img className="npcPokemon" src={this.state.rip} />
+                    )}
+                  </div>
                 </div>
+                <button onClick={() => this.battleSequence()}>FIGHT</button>
+
+                <div>
+                  <div className="userA">
+                    <div>
+                      {/* {this.state.npcAnimation && (
+                        <img className="npcFX" src={this.state.npcAnimation} />
+                      )} */}
+
+                      {!this.state.userPokemon.current_health <= 0 ? (
+                        <img
+                          className={
+                            this.state.userTurn ? "userMove" : "userPokemon"
+                          }
+                          src={
+                            this.state.userPokemon.backImage
+                              ? this.state.userPokemon.backImage
+                              : this.state.rip
+                          }
+                        />
+                      ) : (
+                        <img className="userPokemon" src={this.state.rip} />
+                      )}
+                    </div>
+                    <div className="userB">
+                      <span>{this.state.userPokemon.name}</span>
+                      <MaxHealthBar
+                        percentage={this.state.userPokemon.current_health}
+                      />
+                    </div>
+                  </div>
+                </div>
+                {this.state.user.map((data, index) => (
+                  <div key={index}>
+                    <img
+                      onClick={() => this.change(data)}
+                      src={this.state.user[index].frontImage}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-          </>
+            </div>
+          </div>
         )}
       </div>
     );
   }
 }
-export default withRouter(League);
+export default League;
+
+// {
+//   this.state.gymLeader && (
+//     <>
+//       <h1>GYM LEADER</h1>
+//       {console.log(this.state)}
+//       {this.state.gymLeader.map(data => (
+//         <div>
+//           <h5>{data.name}</h5>
+//           <div>
+//             {data.pokemon.map(pokemon => (
+//               <img src={pokemon.frontImage} />
+//             ))}
+//           </div>
+//         </div>
+//       ))}
+//     </>
+//   );
+// }
+// {
+//   this.state.eliteFour && (
+//     <>
+//       <h1>Elite Four</h1>
+//       {this.state.eliteFour.map(data => (
+//         <div>
+//           <h5>{data.name}</h5>
+//           <div>
+//             {data.pokemon.map(pokemon => (
+//               <img src={pokemon.frontImage} />
+//             ))}
+//           </div>
+//         </div>
+//       ))}
+//     </>
+//   );
+// }
