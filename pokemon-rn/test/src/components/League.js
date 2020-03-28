@@ -85,12 +85,6 @@ class League extends Component {
     }
   };
 
-  // let recipesCopy = JSON.parse(JSON.stringify(this.state.recipes))
-  //  //make changes to ingredients
-  //  recipesCopy[0].ingredients = //whatever new ingredients are
-  //  this.setState({
-  //     recipes:recipesCopy
-  //   })
 
   render() {
     return (

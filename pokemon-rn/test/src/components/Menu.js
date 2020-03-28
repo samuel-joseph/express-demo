@@ -6,9 +6,7 @@ export default class Menu extends Component {
     super(props);
   }
 
-  componentDidMount = () => {
-    this.props.saySomething("Choose your destination.");
-  };
+  componentDidMount = () => {};
 
   render() {
     return (

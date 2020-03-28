@@ -55,7 +55,7 @@ img {
 .setPokeball {
   display: flex;
   flex-direction: row;
-  /* justify-content: space-evenly; */
+  justify-content: space-evenly;
 }
 
 p {
@@ -198,7 +198,7 @@ h4 {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
 }
 
 .npcB {
@@ -211,16 +211,34 @@ h4 {
   margin-left: 25%;
 }
 
+.entireUser {
+  height: 80%;
+}
+
 .userA {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
+  width: 50%;
+}
+
+.imagePoke {
+  width: 100%;
+}
+
+.imagePoke1 {
+  margin-bottom: 10px;
+  width: 25%;
 }
 
 .sparePokemons {
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: gray;
+  height: 50%;
 }
 
 .userPokemon {
@@ -242,9 +260,26 @@ h4 {
   position: fixed;
 }
 
-/* .hunt{
-    margin-top: -50px;
-  } */
+.maxhealthbar {
+  position: relative;
+  height: 2vh;
+}
+
+.healthbar {
+  background: rgb(71, 167, 71);
+  height: 100%;
+  border-radius: inherit;
+  border: 2px solid black;
+  transition: width 0.5s ease-in;
+}
+
+.danger {
+  background: rgb(200, 10, 10);
+  height: 100%;
+  border-radius: inherit;
+  border: 2px solid black;
+  transition: width 0.5s ease-in;
+}
 
 .npcMove {
   width: 50vw;
@@ -252,6 +287,10 @@ h4 {
   animation-name: npcAttack;
   animation-duration: 1s;
   animation-iteration-count: 1;
+}
+
+.capture {
+  width: 8%;
 }
 
 .userMove {

@@ -14,6 +14,7 @@ import {
 
 import Level from "./Level";
 import Pokecenter from "./Pokecenter";
+import MaxHealthBar from "./maxHealthBar";
 
 class Battle extends Component {
   constructor(props) {
@@ -27,7 +28,8 @@ class Battle extends Component {
         name: null,
         frontImage: null,
         backImage: null,
-        health: null
+        health: null,
+        current_health: null
       },
       postMove: [],
       arrayPostMoves: [],
@@ -42,7 +44,10 @@ class Battle extends Component {
       },
       win: false,
       npcTurn: false,
-      userTurn: false
+      userTurn: false,
+      count: null,
+      rip:
+        "https://b7.pngbarn.com/png/250/103/headstone-grave-cemetery-rest-in-peace-grave-s-png-clip-art-thumbnail.png"
     };
   }
 
@@ -66,6 +71,7 @@ class Battle extends Component {
     const current_health = fighterPokemon.current_health;
 
     this.setState({
+      count: 3,
       npc,
       userPokemon,
       fighterPokemon,
@@ -76,6 +82,7 @@ class Battle extends Component {
         frontImage,
         backImage,
         health,
+        current_health,
         level,
         total_experience,
         current_experience,
@@ -176,13 +183,6 @@ class Battle extends Component {
   };
 
   battleSequence = async () => {
-    let index = null;
-    for (let i = 0; i < this.state.userPokemon.length; i++) {
-      if (this.state.userPokemon[i].id === this.state.fighterPokemon.id) {
-        index = i;
-      }
-    }
-
     let formData = this.state.formData;
     let id = this.state.fighterPokemon.id;
     let npcHealth = this.state.npc.current_health;
@@ -228,17 +228,16 @@ class Battle extends Component {
     }
 
     if (npcHealth <= 0 && userHealth <= 0) {
-      const passData = {
-        current_health: 0
-      };
-      this.setState({
-        npc: { ...this.state.npc, current_health: 0 },
-        fighterPokemon: { ...this.state.user, current_health: 0 },
-        formData: { ...this.state.formData, current_health: userHealth }
-      });
-
-      const resp = await update(id, passData);
-      this.props.history.push("/pokecenter");
+      setTimeout(
+        function() {
+          this.setState({
+            npc: { ...this.state.npc, current_health: 0 },
+            fighterPokemon: { ...this.state.user, current_health: 0 },
+            formData: { ...this.state.formData, current_health: userHealth }
+          });
+        }.bind(this),
+        2000
+      );
     } else if (npcHealth < 0 || npcHealth === 0) {
       const passData = {
         current_health: userHealth
@@ -250,18 +249,34 @@ class Battle extends Component {
 
       const resp = await update(id, passData);
       this.evolution();
-      this.props.history.push("/pokecenter");
     } else if (userHealth < 0 || userHealth === 0) {
+      let index = null;
       const userPokemon = this.state.userPokemon;
       userPokemon.splice(index, 1);
       const fighterPokemon = userPokemon[0];
+      console.log(fighterPokemon);
+      const passData = {
+        current_health: 0
+      };
+      if (this.state.userPokemon) {
+        this.props.saySomething(
+          "YOU LOST... Go head to Pokecenter and heal those poor pokemons then try again"
+        );
+        const resp = await update(this.state.fighterPokemon.id, passData);
+      } else {
+        for (let i = 0; i < this.state.userPokemon.length; i++) {
+          if (this.state.userPokemon[i].id === this.state.fighterPokemon.id) {
+            index = i;
+          }
+        }
+      }
       this.setState({
         userPokemon,
         fighterPokemon,
         formData: { ...this.state.formData, current_health: 0 },
+        fighterPokemon: { ...this.state.user, current_health: 0 },
         win: true
       });
-      this.props.history.push("/start");
     } else {
       const passData = {
         current_health: userHealth
@@ -290,6 +305,7 @@ class Battle extends Component {
   storePokemon = async () => {
     const postData = this.state.postData;
     const postMove = this.state.postMove;
+    console.log(postData);
     const resp = await storePokemon(postData);
     for (let i = 0; i < postMove.length; i++) {
       const resp1 = await addMoves(resp.data.id, postMove[i]);
@@ -297,7 +313,9 @@ class Battle extends Component {
   };
 
   readyCatch = async () => {
-    this.setState({ catch: true });
+    let count = this.state.count;
+    count--;
+    this.setState({ catch: true, count });
     const hp = this.state.npc.current_health;
     const totalHp = this.state.fighterPokemon.health;
     const chance = totalHp * 0.12;
@@ -307,7 +325,6 @@ class Battle extends Component {
       function() {
         if (dice <= chance) {
           this.storePokemon();
-          this.props.history.push("/start");
         } else {
           this.setState({ catch: false });
         }
@@ -336,19 +353,6 @@ class Battle extends Component {
       }.bind(this),
       2000
     );
-
-    // setTimeout(
-    //   function() {
-    //     this.setState({
-    //       fighterPokemon: {
-    //         ...this.state.fighterPokemon,
-    //         current_health: userHealth
-    //       },
-    //       formData: { ...this.state.formData, current_health: userHealth }
-    //     });
-    //   }.bind(this),
-    //   2500
-    // );
 
     const changedPokemon = await getPokemon(id);
     let userHealth = changedPokemon.current_health;
@@ -382,84 +386,109 @@ class Battle extends Component {
   render() {
     return (
       <div>
-        {this.state.fighterPokemon.current_health <= 0 ? (
-          <Pokecenter win={this.state.win} />
-        ) : (
+        {this.state.userPokemon && (
           <div>
-            <div className="npc">
-              <div>
-                {this.state.userAnimation && (
-                  <img className="userFX" src={this.state.userAnimation} />
-                )}
-
+            <div>
+              <div className="npc">
                 <div>
-                  <div className="npcA">
-                    <div className="npcB">
-                      <span>{this.state.npc.name}</span>
-                      {this.state.npc.current_health}/{this.state.npc.health}
-                    </div>
-                    <div>
-                      <img
-                        className={
-                          this.state.npcTurn ? "npcMove" : "npcPokemon"
-                        }
-                        src={
-                          this.state.catch
-                            ? "https://i.gifer.com/origin/28/2860d2d8c3a1e402e0fc8913cd92cd7a_w200.gif"
-                            : this.state.npc.frontImage
-                        }
-                      />
+                  {this.state.userAnimation && (
+                    <img className="userFX" src={this.state.userAnimation} />
+                  )}
+
+                  <div>
+                    <div className="npcA">
+                      <div className="npcB">
+                        <span>{this.state.npc.name}</span>
+                        <MaxHealthBar
+                          percentage={this.state.npc.current_health}
+                        />
+                      </div>
+                      <div>
+                        {this.state.npc.current_health ? (
+                          <img
+                            className={
+                              this.state.npcTurn ? "npcMove" : "npcPokemon"
+                            }
+                            src={
+                              this.state.catch
+                                ? "https://i.gifer.com/origin/28/2860d2d8c3a1e402e0fc8913cd92cd7a_w200.gif"
+                                : this.state.npc.frontImage
+                            }
+                          />
+                        ) : (
+                          <img className="npcPokemon" src={this.state.rip} />
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <button onClick={() => this.battleSequence()}>FIGHT</button>
-            <div>
-              <div className="userA">
-                <div>
-                  {this.state.npcAnimation && (
-                    <img className="npcFX" src={this.state.npcAnimation} />
-                  )}
-                  <img
-                    className={this.state.userTurn ? "userMove" : "userPokemon"}
-                    src={this.state.fighterPokemon.backImage}
-                  />
-                </div>
-                <div className="userB">
-                  <span>{this.state.fighterPokemon.name}</span>
-                  {this.state.fighterPokemon.current_health}/
-                  {this.state.fighterPokemon.health}
+              {this.state.npc.current_health > 0 &&
+                this.state.fighterPokemon.current_health > 0 && (
+                  <button onClick={() => this.battleSequence()}>FIGHT</button>
+                )}
+              <div>
+                <div className="userA">
+                  <div>
+                    {this.state.npcAnimation && (
+                      <img className="npcFX" src={this.state.npcAnimation} />
+                    )}
+
+                    {!this.state.fighterPokemon.current_health <= 0 ? (
+                      <img
+                        className={
+                          this.state.userTurn ? "userMove" : "userPokemon"
+                        }
+                        src={
+                          this.state.fighterPokemon.backImage
+                            ? this.state.fighterPokemon.backImage
+                            : this.state.rip
+                        }
+                      />
+                    ) : (
+                      <img className="userPokemon" src={this.state.rip} />
+                    )}
+                  </div>
+                  <div className="userB">
+                    <span>{this.state.fighterPokemon.name}</span>
+                    <MaxHealthBar
+                      percentage={this.state.fighterPokemon.current_health}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
+
+            <>
+              {this.state.userPokemon && (
+                <div className="sparePokemons">
+                  {this.state.count !== 0 && (
+                    <span>
+                      {this.state.userPokemon.length <= 6 && (
+                        <>
+                          <img
+                            className="imagePoke1"
+                            onClick={() => this.readyCatch()}
+                            src="https://purepng.com/public/uploads/medium/purepng.com-pokeballpokeballdevicepokemon-ballpokemon-capture-ball-1701527825795vtfp2.png"
+                          />
+                          x{this.state.count}
+                        </>
+                      )}
+                    </span>
+                  )}
+                  {this.state.userPokemon.map((data, index) => (
+                    <div key={index}>
+                      <img
+                        onClick={() => this.change(data)}
+                        src={this.state.userPokemon[index].frontImage}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
           </div>
         )}
-
-        <>
-          {this.state.userPokemon && (
-            <div className="sparePokemons">
-              {this.state.userPokemon && (
-                <>
-                  {this.state.userPokemon.length <= 6 && (
-                    <img
-                      onClick={() => this.readyCatch()}
-                      src="https://pngimage.net/wp-content/uploads/2018/06/pokeball-pixel-png-8.png"
-                    />
-                  )}
-                </>
-              )}
-              {this.state.userPokemon.map((data, index) => (
-                <div key={index}>
-                  <img
-                    onClick={() => this.change(data)}
-                    src="https://pngimage.net/wp-content/uploads/2018/06/pokeball-pixel-png-8.png"
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-        </>
       </div>
     );
   }

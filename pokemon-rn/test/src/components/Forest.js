@@ -72,7 +72,10 @@ class Forest extends Component {
     return (
       <div>
         {this.state.proceed ? (
-          <Battle pokemonID={this.state.chosenPokemon} />
+          <Battle
+            saySomething={e => this.props.saySomething(e)}
+            pokemonID={this.state.chosenPokemon}
+          />
         ) : (
           <>
             <div>
