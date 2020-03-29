@@ -165,7 +165,10 @@ class App extends Component {
         </div>
 
         <div className="main">
-          <Route path="/league" render={() => <League />} />
+          <Route
+            path="/league"
+            render={() => <League saySomething={e => this.saySomething(e)} />}
+          />
           <Route
             path="/forest"
             render={() => <Forest saySomething={e => this.saySomething(e)} />}
