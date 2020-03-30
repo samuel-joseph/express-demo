@@ -15,6 +15,11 @@ class League extends Component {
     super(props);
 
     this.state = {
+      currentNpc: {
+        name: null,
+        image: null
+      },
+      userWin: false,
       user: null,
       userPokemon: null,
       userMoves: null,
@@ -34,50 +39,91 @@ class League extends Component {
       gymLeader: [
         {
           name: "Brock",
+          message: "Good job Trainer!",
+          image:
+            "https://em.wattpad.com/65355e3409b8e29cdf2256fe160ea59cd3787abc/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f6b4945516f5a373041744f5034413d3d2d3335323236323731302e313439346530303531623832313934383639373839303938313438352e706e67?s=fit&w=720&h=720",
           array: [74, 95],
           pokemon: []
         },
         {
           name: "Misty",
+          image:
+            "https://cdn.bulbagarden.net/upload/thumb/f/f6/Lets_Go_Pikachu_Eevee_Misty.png/183px-Lets_Go_Pikachu_Eevee_Misty.png",
           array: [120, 121],
           pokemon: []
         },
         {
           name: "Lt. Surge",
+          image:
+            "https://cdn.bulbagarden.net/upload/thumb/b/bc/Lets_Go_Pikachu_Eevee_Lt_Surge.png/216px-Lets_Go_Pikachu_Eevee_Lt_Surge.png",
           array: [100, 25, 26],
           pokemon: []
         },
         {
           name: "Erika",
+          image:
+            "https://projectpokemon.org/home/uploads/monthly_2019_06/large.celadon-city-char-erika.png.723ad4918835af3cb562f78c11a971db.png",
           array: [114, 70, 71],
           pokemon: []
         },
         {
           name: "Koga",
+          image:
+            "https://cdn.bulbagarden.net/upload/thumb/f/f4/Lets_Go_Pikachu_Eevee_Koga.png/225px-Lets_Go_Pikachu_Eevee_Koga.png",
           array: [109, 89, 109, 110],
           pokemon: []
         },
         {
           name: "Sabrina",
+          image:
+            "https://cdn.bulbagarden.net/upload/thumb/7/78/Lets_Go_Pikachu_Eevee_Sabrina.png/211px-Lets_Go_Pikachu_Eevee_Sabrina.png",
           array: [64, 122, 49, 65],
           pokemon: []
         },
         {
           name: "Blaine",
+          image:
+            "https://cdn.bulbagarden.net/upload/thumb/c/c8/Lets_Go_Pikachu_Eevee_Blaine.png/216px-Lets_Go_Pikachu_Eevee_Blaine.png",
           array: [38, 78, 59, 126],
           pokemon: []
         },
         {
           name: "Giovanni",
+          image:
+            "https://gamepedia.cursecdn.com/wiki_marriland/f/f2/Giovanni.png",
           array: [53, 111, 112, 115, 31],
           pokemon: []
         }
       ],
       eliteFour: [
-        { name: "Lorelei", array: [87, 124, 91, 80, 131], pokemon: [] },
-        { name: "Bruno", array: [95, 106, 95, 107, 68], pokemon: [] },
-        { name: "Agatha", array: [93, 42, 93, 24, 94], pokemon: [] },
-        { name: "Lance", array: [130, 148, 142, 148, 149], pokemon: [] }
+        {
+          name: "Lorelei",
+          image:
+            "https://cdn.bulbagarden.net/upload/thumb/f/f7/Lets_Go_Pikachu_Eevee_Lorelei.png/162px-Lets_Go_Pikachu_Eevee_Lorelei.png",
+          array: [87, 124, 91, 80, 131],
+          pokemon: []
+        },
+        {
+          name: "Bruno",
+          image:
+            "https://cdn.bulbagarden.net/upload/thumb/4/4c/Lets_Go_Pikachu_Eevee_Bruno.png/200px-Lets_Go_Pikachu_Eevee_Bruno.png",
+          array: [95, 106, 95, 107, 68],
+          pokemon: []
+        },
+        {
+          name: "Agatha",
+          image:
+            "https://vignette.wikia.nocookie.net/pokemon/images/c/c9/Agatha_Lets_Go_Pikachu_Eevee.png/revision/latest?cb=20181120184616",
+          array: [93, 42, 93, 24, 94],
+          pokemon: []
+        },
+        {
+          name: "Lance",
+          image:
+            "https://vignette.wikia.nocookie.net/vsbattles/images/f/f5/HeartGold_SoulSilver_Lance.png/revision/latest/scale-to-width-down/340?cb=20161217185553",
+          array: [130, 148, 142, 148, 149],
+          pokemon: []
+        }
       ]
     };
   }
@@ -87,6 +133,9 @@ class League extends Component {
     const eliteFour = this.state.eliteFour;
     let gymLeaderCopy = JSON.parse(JSON.stringify(gymLeader));
     let eliteFourCopy = JSON.parse(JSON.stringify(eliteFour));
+    this.props.saySomething(
+      "Challenge the Pokemon Master by defeating all the Gym Leaders and Elite Four!"
+    );
 
     for (let i = 0; i < gymLeader.length; i++) {
       for (let j = 0; j < gymLeader[i].array.length; j++) {
@@ -116,9 +165,16 @@ class League extends Component {
   battleStart = async () => {
     const npcContainer = this.state.gymLeader.shift();
     const npc = npcContainer.pokemon;
+    const name = npcContainer.name;
+    const image = npcContainer.image;
+
     const npcPokemon = npc.shift();
     const npcMoves = await getMoves(npcPokemon.id);
     this.setState({
+      currentNpc: {
+        name,
+        image
+      },
       npc,
       npcPokemon,
       npcMoves,
@@ -275,8 +331,8 @@ class League extends Component {
 
         const resp = await update(id, passData);
         console.log(this.state.npc.length);
-      } else if (this.state.npc.length === 0) {
-        this.setState({ isStart: false, npcPokemon: null });
+      } else {
+        this.setState({ userWin: true, npcPokemon: null });
       }
       this.evolution();
     } else if (userHealth < 0 || userHealth === 0) {
@@ -377,17 +433,40 @@ class League extends Component {
   render() {
     return (
       <div>
-        {this.state.npcPokemon && <>{console.log(this.state.userPokemon)}</>}
         {!this.state.isStart && (
-          <button onClick={() => this.battleStart()}>START</button>
+          <div>
+            <h4>GYM LEADER</h4>
+            <div className="gym">
+              {this.state.gymLeader &&
+                this.state.gymLeader.map(data => (
+                  <img className="leader" src={data.image} />
+                ))}
+            </div>
+
+            <h4>ELITE FOUR</h4>
+            <div className="elite">
+              {this.state.eliteFour &&
+                this.state.eliteFour.map(data => (
+                  <img className="four" src={data.image} />
+                ))}
+            </div>
+            <button onClick={() => this.battleStart()}>START</button>
+          </div>
         )}
+
+        {this.state.userWin && (
+          <div>
+            <img src={this.state.currentNpc.image} />
+          </div>
+        )}
+
         {this.state.npcPokemon && (
           <div className="npc">
             {this.state.npc.map((data, index) => (
               <div key={index}>
                 <img
                   onClick={() => this.change(data)}
-                  src="https://purepng.com/public/uploads/medium/purepng.com-pokeballpokeballdevicepokemon-ballpokemon-capture-ball-1701527825795vtfp2.png"
+                  src="https://i.ya-webdesign.com/images/pokeball-pixel-png-2.png"
                 />
               </div>
             ))}
