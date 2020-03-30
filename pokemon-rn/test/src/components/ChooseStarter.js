@@ -52,7 +52,8 @@ class ChooseStarter extends Component {
       starters.push(resp);
       starterMoves.push(resp1);
     }
-    // this.props.saySomething("Choose a starter pokemon");
+    console.log(starters);
+    this.props.saySomething("Choose a starter pokemon");
     this.setState({ starters, starterMoves });
   };
 
@@ -85,7 +86,8 @@ class ChooseStarter extends Component {
         frontImage: pokemon.frontImage,
         backImage: pokemon.backImage,
         health: pokemon.health,
-        current_health: pokemon.current_health
+        current_health: pokemon.current_health,
+        fullyEvolved: pokemon.fullyEvolved
       }
     });
     this.passMoves(moves);

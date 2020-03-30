@@ -24,7 +24,7 @@ class Pokecenter extends Component {
   componentDidMount = async () => {
     const user = await trainerPokemon();
     this.setState({ user });
-    console.log(user);    
+    console.log(user);
   };
 
   heal = async () => {
@@ -51,34 +51,29 @@ class Pokecenter extends Component {
   render() {
     return (
       <div>
-        <div>
-          {this.state.user && (
-            <>
-              {this.state.user.map(data => (
-                <div>
-                  <img
-                    onClick={() => this.show(data.id)}
-                    src="https://pngimage.net/wp-content/uploads/2018/06/pokeball-pixel-png-8.png"
-                  />
-                </div>
-              ))}
-            </>
-          )}
-        </div>
+        {this.state.user && (
+          <div className="pokecenter0">
+            {this.state.isClicked ? (
+              this.state.user.map(data => (
+                <img className="pokeAtCenter" src={data.frontImage} />
+              ))
+            ) : (
+              <div className="pokecenter">
+                {this.state.user.map(data => (
+                  <div className="pokecenter1">
+                    <img
+                      className="healPoke"
+                      onClick={() => this.show(data.id)}
+                      src="https://www.freeiconspng.com/uploads/pokeball-transparent-image-15.png"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
         {!this.state.isClicked && (
           <button onClick={() => this.heal()}>HEAL</button>
-        )}
-        {this.state.pokemon && (
-          <>
-            {this.state.pokemon.map(data => (
-              <div>
-                <img src={data.frontImage} />
-                <div>
-                  {data.current_health}/{data.health}
-                </div>
-              </div>
-            ))}
-          </>
         )}
       </div>
     );

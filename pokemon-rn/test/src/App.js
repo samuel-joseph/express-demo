@@ -27,6 +27,7 @@ class App extends Component {
     super(props);
 
     this.state = {
+      trainername: null,
       id: null,
       currentUser: null,
       formData: {
@@ -75,7 +76,8 @@ class App extends Component {
     const currentUser = regData;
     console.log(currentUser);
     this.setState({
-      currentUser
+      currentUser,
+      trainername: currentUser.username
     });
 
     this.props.history.push("/start");
@@ -85,7 +87,8 @@ class App extends Component {
     e.preventDefault();
     const currentUser = await loginUser(loginData);
     const id = currentUser.id;
-    this.setState({ currentUser, id });
+    const trainername = currentUser.username;
+    this.setState({ currentUser, trainername, id });
     this.props.history.push("/start");
   };
 
@@ -189,7 +192,12 @@ class App extends Component {
           <Route path="/pokemons/pokedex" render={() => <Pokedex />} />
           <Route
             path="/trainer"
-            render={() => <Trainer saySomething={e => this.saySomething(e)} />}
+            render={() => (
+              <Trainer
+                trainername={this.state.trainername}
+                saySomething={e => this.saySomething(e)}
+              />
+            )}
           />
           <Route path="/pokecenter" render={() => <Pokecenter />} />
         </div>

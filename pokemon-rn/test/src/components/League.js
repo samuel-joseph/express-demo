@@ -264,8 +264,6 @@ class League extends Component {
         let index = null;
         const npc = this.state.npc;
         const npcPokemon = npc.pop(0);
-        console.log(npc);
-        console.log(npcPokemon);
         const passData = {
           current_health: 0
         };

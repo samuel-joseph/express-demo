@@ -14,25 +14,29 @@ class Forest extends Component {
           image:
             "https://i.pinimg.com/originals/2a/a2/0b/2aa20b2129a6b56fd02eb2d794a1a689.png",
           name: "Route 1-35",
-          arrayPokemons: [19, 16, 29, 32, 147, 133]
+          arrayPokemons: [19, 16, 29, 32, 147, 133],
+          rank: "low"
         },
         {
           image:
             "https://i.pinimg.com/originals/2a/a2/0b/2aa20b2129a6b56fd02eb2d794a1a689.png",
           name: "Route 36-75",
-          arrayPokemons: [25, 35, 106, 107, 123, 74]
+          arrayPokemons: [25, 35, 106, 107, 123, 74],
+          rank: "medium"
         },
         {
           image:
             "https://i.pinimg.com/originals/2a/a2/0b/2aa20b2129a6b56fd02eb2d794a1a689.png",
           name: "Route 75-100",
-          arrayPokemons: [42, 95, 108, 79, 126, 143]
+          arrayPokemons: [42, 95, 108, 79, 126, 143],
+          rank: "high"
         }
       ],
       pokemons: [],
       chosenPokemon: null,
       isClicked: false,
-      proceed: false
+      proceed: false,
+      rank: null
     };
   }
 
@@ -47,8 +51,9 @@ class Forest extends Component {
     this.setState({ pokemons });
   };
 
-  forestPokemons = async arrayPokemons => {
-    const id = arrayPokemons;
+  forestPokemons = async data => {
+    console.log(data);
+    const id = data.arrayPokemons;
     this.resetMap();
     for (let i = 0; i < id.length; i++) {
       const pokemons = await getPokemon(id[i]);
@@ -57,9 +62,11 @@ class Forest extends Component {
         isClicked: true
       });
     }
+    this.setState({ rank: data.rank });
   };
 
   battle = () => {
+    console.log(this.state.rank);
     const arrayPokemons = this.state.pokemons;
     const chosenPokemon = this.state.pokemons[
       Math.floor(Math.random() * Math.floor(arrayPokemons.length - 1))
@@ -73,6 +80,7 @@ class Forest extends Component {
       <div>
         {this.state.proceed ? (
           <Battle
+            rank={this.state.rank}
             saySomething={e => this.props.saySomething(e)}
             pokemonID={this.state.chosenPokemon}
           />
@@ -84,7 +92,7 @@ class Forest extends Component {
                   <div className=".grass">
                     <img
                       className="grassImg"
-                      onClick={() => this.forestPokemons(data.arrayPokemons)}
+                      onClick={() => this.forestPokemons(data)}
                       src={data.image}
                     />
                     <h5>{data.name}</h5>
@@ -103,8 +111,9 @@ class Forest extends Component {
             )}
             {this.state.isClicked && (
               <div>
+                <h4>These are your possible pokemons to catch</h4>
                 <button className="register" onClick={() => this.battle()}>
-                  CONFIRM
+                  HUNT
                 </button>
               </div>
             )}

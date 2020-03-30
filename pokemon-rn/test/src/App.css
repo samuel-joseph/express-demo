@@ -106,11 +106,12 @@ p {
 }
 
 .trainer {
+  padding-top: 0;
+  margin-bottom: 80px;
   display: flex;
   flex-direction: row;
-  width: 100vw;
-  justify-content: center;
-  overflow: scroll;
+  justify-content: space-around;
+  height: 60%;
 }
 
 h4 {
@@ -121,20 +122,49 @@ h4 {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  height: 100%;
+}
+
+.trainerPokemon {
+  width: 50%;
+}
+
+.trainerA {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
 }
 
 .moveContainer {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: stretch;
+  align-items: center;
+  height: 100%;
+  width: 150%;
+  overflow: scroll;
+  border: 5px solid red;
+  background-color: white;
+}
+
+.movesets {
+  margin-top: 20px;
+  padding-bottom: 20px;
 }
 
 .specificPokemon {
-  width: 100%;
+  width: 150%;
+  text-align: left;
 }
 
+.specificPokemonB {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .main {
-  /* background-color: gray; */
+  background-color: gray;
   height: 70vh;
   margin-top: 15vh;
   overflow: scroll;
@@ -232,6 +262,11 @@ h4 {
   width: 25%;
 }
 
+.healPoke {
+  margin-bottom: 10px;
+  width: 50%;
+}
+
 .sparePokemons {
   display: flex;
   flex-direction: row;
@@ -263,6 +298,34 @@ h4 {
 .maxhealthbar {
   position: relative;
   height: 2vh;
+}
+
+.divBall {
+  padding: 0 0;
+}
+
+.pokecenter {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 10px;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: black;
+}
+
+.pokecenter0 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 10px;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pokecenter1 {
+  display: flex;
+  justify-content: center;
 }
 
 .healthbar {

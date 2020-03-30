@@ -134,44 +134,63 @@ class Battle extends Component {
     let frontImage = this.state.fighterPokemon.frontImage;
     let backImage = this.state.fighterPokemon.backImage;
     let num = frontImage.match(/\d+/g).map(Number);
+    let name = this.state.fighterPokemon.name;
 
-    current_experience = current_experience + (total_experience * 1.5) / level;
-    current_experience = current_experience + 300;
+    switch (this.props.rank) {
+      case "low":
+        current_experience =
+          current_experience + (total_experience * 2) / level;
+        break;
+      case "medium":
+        current_experience =
+          current_experience + (total_experience * 3) / level;
+        break;
+      case "high":
+        current_experience =
+          current_experience + (total_experience * 4) / level;
+        break;
+    }
+    console.log(current_experience);
 
     if (level < 100) {
-      if (current_experience >= total_experience) {
+      while (current_experience >= total_experience) {
         level++;
         health += 2;
-        current_experience = 0;
-        if (level === 2 && fullyEvolved === false) {
-          num++;
-          frontImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${num}.png`;
-          backImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon//back/${num}.png`;
-          let resp = await getMoves(num);
-          let del = await getMoves(id);
-          for (let i = 0; i < del.length; i++) {
-            await removeMove(id, del[i].id);
-          }
-          for (let i = 0; i < resp.length; i++) {
-            this.newMoves(resp[i], id);
-          }
-        } else if (level === 30 && fullyEvolved === false) {
-          num++;
-          frontImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${num}.png`;
-          backImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon//back/${num}.png`;
-          fullyEvolved = true;
-          let resp = await getMoves(num);
-          let del = await getMoves(id);
-          for (let i = 0; i < del.length; i++) {
-            await removeMove(id, del[i].id);
-          }
-          for (let i = 0; i < resp.length; i++) {
-            this.newMoves(resp[i], id);
-          }
+        current_experience = current_experience - total_experience;
+      }
+      if (level === 15 && fullyEvolved === false) {
+        num++;
+        let getName = await getPokemon(num);
+        name = getName.name;
+        frontImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${num}.png`;
+        backImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon//back/${num}.png`;
+        let resp = await getMoves(num);
+        let del = await getMoves(id);
+        for (let i = 0; i < del.length; i++) {
+          await removeMove(id, del[i].id);
+        }
+        for (let i = 0; i < resp.length; i++) {
+          this.newMoves(resp[i], id);
+        }
+      } else if (level === 30 && fullyEvolved === false) {
+        num++;
+        frontImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${num}.png`;
+        backImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon//back/${num}.png`;
+        fullyEvolved = true;
+        let resp = await getMoves(num);
+        let del = await getMoves(id);
+        for (let i = 0; i < del.length; i++) {
+          await removeMove(id, del[i].id);
+        }
+        for (let i = 0; i < resp.length; i++) {
+          this.newMoves(resp[i], id);
         }
       }
     }
+
+    console.log(current_experience);
     const passData = {
+      name,
       health,
       current_health: userHealth,
       level,
@@ -252,13 +271,12 @@ class Battle extends Component {
     } else if (userHealth < 0 || userHealth === 0) {
       let index = null;
       const userPokemon = this.state.userPokemon;
-      userPokemon.splice(index, 1);
-      const fighterPokemon = userPokemon[0];
-      console.log(fighterPokemon);
+      // userPokemon.splice(index, 1);
+      const fighterPokemon = userPokemon.pop(0);
       const passData = {
         current_health: 0
       };
-      if (this.state.userPokemon) {
+      if (this.state.userPokemon.length === 0) {
         this.props.saySomething(
           "YOU LOST... Go head to Pokecenter and heal those poor pokemons then try again"
         );
@@ -273,8 +291,7 @@ class Battle extends Component {
       this.setState({
         userPokemon,
         fighterPokemon,
-        formData: { ...this.state.formData, current_health: 0 },
-        fighterPokemon: { ...this.state.user, current_health: 0 },
+        formData: { ...this.state.formData, current_health: userHealth },
         win: true
       });
     } else {
@@ -411,7 +428,7 @@ class Battle extends Component {
                             }
                             src={
                               this.state.catch
-                                ? "https://i.gifer.com/origin/28/2860d2d8c3a1e402e0fc8913cd92cd7a_w200.gif"
+                                ? "https://i.ya-webdesign.com/images/pokeball-pixel-png-2.png"
                                 : this.state.npc.frontImage
                             }
                           />
@@ -469,7 +486,7 @@ class Battle extends Component {
                           <img
                             className="imagePoke1"
                             onClick={() => this.readyCatch()}
-                            src="https://purepng.com/public/uploads/medium/purepng.com-pokeballpokeballdevicepokemon-ballpokemon-capture-ball-1701527825795vtfp2.png"
+                            src="https://i.ya-webdesign.com/images/pokeball-pixel-png-2.png"
                           />
                           x{this.state.count}
                         </>
