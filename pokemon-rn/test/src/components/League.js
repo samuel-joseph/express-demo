@@ -5,10 +5,14 @@ import {
   getMoves,
   update,
   addMoves,
-  removeMove
+  removeMove,
+  getChampion,
+  ownedPokemon,
+  newChampion
 } from "../services/api_helper";
 
 import MaxHealthBar from "./maxHealthBar";
+import Outcome from "./Outcome";
 
 class League extends Component {
   constructor(props) {
@@ -33,6 +37,7 @@ class League extends Component {
       userTurn: false,
       npcTurn: false,
       isStart: false,
+      isChamp: false,
       rip:
         "https://b7.pngbarn.com/png/250/103/headstone-grave-cemetery-rest-in-peace-grave-s-png-clip-art-thumbnail.png",
       formData: {
@@ -52,7 +57,8 @@ class League extends Component {
           message: "Good job trainer",
           image:
             "https://cdn.bulbagarden.net/upload/thumb/f/f6/Lets_Go_Pikachu_Eevee_Misty.png/183px-Lets_Go_Pikachu_Eevee_Misty.png",
-          array: [120, 121],
+          // array: [120, 121],
+          array: [74, 95],
           pokemon: []
         },
         {
@@ -60,7 +66,8 @@ class League extends Component {
           message: "Good job trainer",
           image:
             "https://cdn.bulbagarden.net/upload/thumb/b/bc/Lets_Go_Pikachu_Eevee_Lt_Surge.png/216px-Lets_Go_Pikachu_Eevee_Lt_Surge.png",
-          array: [100, 25, 26],
+          // array: [100, 25, 26],
+          array: [74, 95],
           pokemon: []
         },
         {
@@ -68,7 +75,8 @@ class League extends Component {
           message: "Good job trainer",
           image:
             "https://projectpokemon.org/home/uploads/monthly_2019_06/large.celadon-city-char-erika.png.723ad4918835af3cb562f78c11a971db.png",
-          array: [114, 70, 71],
+          // array: [114, 70, 71],
+          array: [74, 95],
           pokemon: []
         },
         {
@@ -76,7 +84,8 @@ class League extends Component {
           message: "Good job trainer",
           image:
             "https://cdn.bulbagarden.net/upload/thumb/f/f4/Lets_Go_Pikachu_Eevee_Koga.png/225px-Lets_Go_Pikachu_Eevee_Koga.png",
-          array: [109, 89, 109, 110],
+          // array: [109, 89, 109, 110],
+          array: [74, 95],
           pokemon: []
         },
         {
@@ -84,7 +93,8 @@ class League extends Component {
           message: "Good job trainer",
           image:
             "https://cdn.bulbagarden.net/upload/thumb/7/78/Lets_Go_Pikachu_Eevee_Sabrina.png/211px-Lets_Go_Pikachu_Eevee_Sabrina.png",
-          array: [64, 122, 49, 65],
+          // array: [64, 122, 49, 65],
+          array: [74, 95],
           pokemon: []
         },
         {
@@ -92,7 +102,8 @@ class League extends Component {
           message: "Good job trainer",
           image:
             "https://cdn.bulbagarden.net/upload/thumb/c/c8/Lets_Go_Pikachu_Eevee_Blaine.png/216px-Lets_Go_Pikachu_Eevee_Blaine.png",
-          array: [38, 78, 59, 126],
+          // array: [38, 78, 59, 126],
+          array: [74, 95],
           pokemon: []
         },
         {
@@ -100,7 +111,8 @@ class League extends Component {
           message: "Good job trainer",
           image:
             "https://gamepedia.cursecdn.com/wiki_marriland/f/f2/Giovanni.png",
-          array: [53, 111, 112, 115, 31],
+          // array: [53, 111, 112, 115, 31],
+          array: [74, 95],
           pokemon: []
         }
       ],
@@ -110,7 +122,8 @@ class League extends Component {
           message: "Good job trainer",
           image:
             "https://cdn.bulbagarden.net/upload/thumb/f/f7/Lets_Go_Pikachu_Eevee_Lorelei.png/162px-Lets_Go_Pikachu_Eevee_Lorelei.png",
-          array: [87, 124, 91, 80, 131],
+          // array: [87, 124, 91, 80, 131],
+          array: [74, 95],
           pokemon: []
         },
         {
@@ -118,7 +131,8 @@ class League extends Component {
           message: "Good job trainer",
           image:
             "https://cdn.bulbagarden.net/upload/thumb/4/4c/Lets_Go_Pikachu_Eevee_Bruno.png/200px-Lets_Go_Pikachu_Eevee_Bruno.png",
-          array: [95, 106, 95, 107, 68],
+          // array: [95, 106, 95, 107, 68],
+          array: [74, 95],
           pokemon: []
         },
         {
@@ -126,7 +140,8 @@ class League extends Component {
           message: "Good job trainer",
           image:
             "https://vignette.wikia.nocookie.net/pokemon/images/c/c9/Agatha_Lets_Go_Pikachu_Eevee.png/revision/latest?cb=20181120184616",
-          array: [93, 42, 93, 24, 94],
+          // array: [93, 42, 93, 24, 94],
+          array: [74, 95],
           pokemon: []
         },
         {
@@ -134,15 +149,22 @@ class League extends Component {
           message: "Good job trainer",
           image:
             "https://vignette.wikia.nocookie.net/vsbattles/images/f/f5/HeartGold_SoulSilver_Lance.png/revision/latest/scale-to-width-down/340?cb=20161217185553",
-          array: [130, 148, 142, 148, 149],
+          // array: [130, 148, 142, 148, 149],
+          array: [74, 95],
           pokemon: []
         }
       ],
-      champion: null
+      champion: {
+        id: null,
+        name: null,
+        message: "Well done trainer",
+        pokemon: null
+      }
     };
   }
 
   componentDidMount = async () => {
+    console.log(localStorage.getItem("id"));
     const gymLeader = this.state.gymLeader;
     const eliteFour = this.state.eliteFour;
     let gymLeaderCopy = JSON.parse(JSON.stringify(gymLeader));
@@ -174,9 +196,22 @@ class League extends Component {
     const userPokemon = user[0];
     const userMoves = await getMoves(userPokemon.id);
     this.setState({ user, userPokemon, userMoves, heal: 5 });
+
+    const champion = await getChampion();
+    console.log(champion);
+    if (champion) {
+      const idChamp = champion.id;
+      const resp = await ownedPokemon(idChamp);
+      const pokemon = resp.data.pokemon;
+      const name = champion.username;
+      this.setState({
+        champion: { ...this.state.champion, id: idChamp, name, pokemon }
+      });
+    }
   };
 
   newNpc = async enemy => {
+    console.log(enemy);
     const npcContainer = enemy.shift();
     const npc = npcContainer.pokemon;
     const name = npcContainer.name;
@@ -199,17 +234,71 @@ class League extends Component {
     });
   };
 
+  finalMatch = async enemy => {
+    // console.log(enemy);
+    // const npcContainer = enemy.shift();
+    const npc = this.state.champion.pokemon;
+    // const name = npcContainer.name;
+    // const image = npcContainer.image;
+    // const message = npcContainer.message;
+
+    const npcPokemon = npc.shift();
+    const npcMoves = await getMoves(npcPokemon.id);
+    this.setState({
+      // currentNpc: {
+      //   name,
+      //   image,
+      //   message
+      // },
+      npc,
+      npcPokemon,
+      npcMoves,
+      isStart: true,
+      userWin: false
+    });
+  };
+
   battleStart = async () => {
     const gymLeader = this.state.gymLeader;
     const eliteFour = this.state.eliteFour;
     let enemy = null;
-    if (gymLeader.length === 0) {
-      enemy = eliteFour;
-    } else {
+    let champ = null;
+
+    if (gymLeader.length !== 0) {
       enemy = gymLeader;
+      this.newNpc(enemy);
+    } else if (gymLeader.length === 0 && eliteFour.length !== 0) {
+      enemy = eliteFour;
+      this.newNpc(enemy);
+    } else if (gymLeader.length === 0 && eliteFour.length === 0) {
+      champ = await getChampion();
+      if (
+        this.state.champion.pokemon &&
+        this.state.champion.pokemon.length !== 0
+      ) {
+        // let pokemon = await ownedPokemon(champ.id);
+        // enemy = pokemon.data.pokemon;
+        this.props.saySomething(
+          `Behold the Pokemon Champion ${champ.username}! Is here!`
+        );
+        this.finalMatch();
+      } else {
+        const postData = {
+          rank: "champion"
+        };
+
+        const id = localStorage.getItem("id");
+        const resp = await newChampion(id, postData);
+        if (this.state.champion.id) {
+          const formerChamp = {
+            rank: "undefined"
+          };
+          const resp1 = await newChampion(this.state.champion.id, formerChamp);
+        }
+        this.setState({ isChamp: true });
+        this.props.saySomething("YOU ARE THE NEW CHAMPION!");
+      }
     }
-    console.log(enemy);
-    this.newNpc(enemy);
   };
 
   evolution = async () => {
@@ -438,7 +527,6 @@ class League extends Component {
   };
 
   change = async pokemon => {
-    console.log(pokemon);
     const fighterPokemonID = this.state.userPokemon.id;
     const formData = this.state.formData;
     const id = pokemon.id;
@@ -512,35 +600,47 @@ class League extends Component {
           </div>
         )}
 
-        {this.state.userWin && (
+        {this.state.isChamp ? (
           <>
-            <div className="currentLeader">
-              <h4>Gym Leader {this.state.currentNpc.name}</h4>
-              <img
-                className="currentLeaderImage"
-                src={this.state.currentNpc.image}
-              />
-              <p>{this.state.currentNpc.message}</p>
-            </div>
-            {this.state.heal !== 0 && (
+            <Outcome
+              result={this.state.userWin}
+              pokemon={this.state.user}
+              champ={this.state.champion}
+            />
+          </>
+        ) : (
+          <>
+            {this.state.userWin && (
               <>
-                <img
-                  onClick={() => this.healAll()}
-                  src="https://i.ya-webdesign.com/images/pixel-potion-png-4.png"
-                />
-                x{this.state.heal}
+                <div className="currentLeader">
+                  <h4>Gym Leader {this.state.currentNpc.name}</h4>
+                  <img
+                    className="currentLeaderImage"
+                    src={this.state.currentNpc.image}
+                  />
+                  <p>{this.state.currentNpc.message}</p>
+                </div>
+                {this.state.heal !== 0 && (
+                  <>
+                    <img
+                      onClick={() => this.healAll()}
+                      src="https://i.ya-webdesign.com/images/pixel-potion-png-4.png"
+                    />
+                    x{this.state.heal}
+                  </>
+                )}
+                <button onClick={() => this.battleStart()}>PROCEED</button>
+                {this.state.user &&
+                  this.state.user.map(data => (
+                    <>
+                      <img src={data.frontImage} />
+                      <MaxHealthBar
+                        percentage={this.state.userPokemon.current_health}
+                      />
+                    </>
+                  ))}
               </>
             )}
-            <button onClick={() => this.battleStart()}>PROCEED</button>
-            {this.state.user &&
-              this.state.user.map(data => (
-                <>
-                  <img src={data.frontImage} />
-                  <MaxHealthBar
-                    percentage={this.state.userPokemon.current_health}
-                  />
-                </>
-              ))}
           </>
         )}
 
@@ -563,9 +663,11 @@ class League extends Component {
                 <div className="npcA">
                   <div className="npcB">
                     <span>{this.state.npcPokemon.name}</span>
-                    <MaxHealthBar
-                      percentage={this.state.npcPokemon.current_health}
-                    />
+                    <div className="hpBar">
+                      <MaxHealthBar
+                        percentage={this.state.npcPokemon.current_health}
+                      />
+                    </div>
                   </div>
                   <div>
                     {this.state.npcPokemon.current_health ? (
@@ -608,9 +710,11 @@ class League extends Component {
                       <div className="userB">
                         <span>{this.state.userPokemon.name}</span>
                         {console.log(this.state.gymLeader.length)}
-                        <MaxHealthBar
-                          percentage={this.state.userPokemon.current_health}
-                        />
+                        <div className="hpBar">
+                          <MaxHealthBar
+                            percentage={this.state.userPokemon.current_health}
+                          />
+                        </div>
                       </div>
                     )}
                   </div>

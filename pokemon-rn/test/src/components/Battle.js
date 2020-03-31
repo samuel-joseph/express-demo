@@ -414,7 +414,7 @@ class Battle extends Component {
       <div>
         {this.state.userPokemon && (
           <div>
-            <div>
+            <div className="forestBat">
               <div className="npc">
                 <div>
                   {this.state.userAnimation && (
@@ -425,9 +425,11 @@ class Battle extends Component {
                     <div className="npcA">
                       <div className="npcB">
                         <span>{this.state.npc.name}</span>
-                        <MaxHealthBar
-                          percentage={this.state.npc.current_health}
-                        />
+                        <div className="hpBar">
+                          <MaxHealthBar
+                            percentage={this.state.npc.current_health}
+                          />
+                        </div>
                       </div>
                       <div>
                         {this.state.npc.current_health ? (
@@ -480,9 +482,11 @@ class Battle extends Component {
                       LV{this.state.fighterPokemon.level}
                       {this.state.fighterPokemon.name}
                     </span>
-                    <MaxHealthBar
-                      percentage={this.state.fighterPokemon.current_health}
-                    />
+                    <div className="hpBar">
+                      <MaxHealthBar
+                        percentage={this.state.fighterPokemon.current_health}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

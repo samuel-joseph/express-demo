@@ -22,11 +22,21 @@ export const registerUser = async registerData => {
   localStorage.setItem("authToken", resp.data.token);
   api.defaults.headers.common.authorization = `Bearer ${resp.data.token}`;
   localStorage.setItem("authToken", resp.data.token);
-  localStorage.setItem("username", resp.data.user.username);
+  localStorage.setItem("name", resp.data.user.username);
   // localStorage.setItem("trainername", resp.data.user.trainername);
   localStorage.setItem("id", resp.data.user.id);
   console.log(resp);
   return resp.data.user;
+};
+
+export const getChampion = async () => {
+  const resp = await api.get("/users/champion");
+  return resp.data[0];
+};
+
+export const newChampion = async (id, postData) => {
+  const resp = await api.put(`/users/${id}`, postData);
+  return;
 };
 
 export const getAllTrainer = async () => {
@@ -73,7 +83,7 @@ export const getMoves = async id => {
 
 export const ownedPokemon = async id => {
   let resp = await api.get(`/pokemons/trainer/${id}`);
-  return resp.data;
+  return resp;
 };
 
 export const addMoves = async (id, moveData) => {
