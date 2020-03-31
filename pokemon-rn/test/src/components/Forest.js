@@ -14,7 +14,27 @@ class Forest extends Component {
           image:
             "https://i.pinimg.com/originals/2a/a2/0b/2aa20b2129a6b56fd02eb2d794a1a689.png",
           name: "Route 1-35",
-          arrayPokemons: [19, 16, 29, 32, 147, 133],
+          arrayPokemons: [
+            // 10,
+            // 13,
+            // 21,
+            // 37,
+            // 39,
+            // 41,
+            // 43,
+            // 69,
+            // 102,
+            // 129,
+            // 48,
+            // 58,
+            // 19,
+            // 16,
+            // 29,
+            // 32,
+            // 133,
+            // 147
+            152
+          ],
           rank: "low"
         },
         {

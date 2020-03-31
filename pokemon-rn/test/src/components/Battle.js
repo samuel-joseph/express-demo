@@ -138,16 +138,19 @@ class Battle extends Component {
 
     switch (this.props.rank) {
       case "low":
-        current_experience =
-          current_experience + (total_experience * 2) / level;
+        current_experience = Math.floor(
+          current_experience + (total_experience * 2) / level
+        );
         break;
       case "medium":
-        current_experience =
-          current_experience + (total_experience * 3) / level;
+        current_experience = Math.floor(
+          current_experience + (total_experience * 3) / level
+        );
         break;
       case "high":
-        current_experience =
-          current_experience + (total_experience * 4) / level;
+        current_experience = Math.floor(
+          current_experience + (total_experience * 3) / level
+        );
         break;
     }
     console.log(current_experience);
@@ -158,7 +161,7 @@ class Battle extends Component {
         health += 2;
         current_experience = current_experience - total_experience;
       }
-      if (level === 15 && fullyEvolved === false) {
+      if (level === 3 || (level === 4 && fullyEvolved === false)) {
         num++;
         let getName = await getPokemon(num);
         name = getName.name;
@@ -172,20 +175,21 @@ class Battle extends Component {
         for (let i = 0; i < resp.length; i++) {
           this.newMoves(resp[i], id);
         }
-      } else if (level === 30 && fullyEvolved === false) {
-        num++;
-        frontImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${num}.png`;
-        backImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon//back/${num}.png`;
-        fullyEvolved = true;
-        let resp = await getMoves(num);
-        let del = await getMoves(id);
-        for (let i = 0; i < del.length; i++) {
-          await removeMove(id, del[i].id);
-        }
-        for (let i = 0; i < resp.length; i++) {
-          this.newMoves(resp[i], id);
-        }
       }
+      // else if (level === 5 && fullyEvolved === false) {
+      //   num++;
+      //   frontImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${num}.png`;
+      //   backImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon//back/${num}.png`;
+      //   fullyEvolved = true;
+      //   let resp = await getMoves(num);
+      //   let del = await getMoves(id);
+      //   for (let i = 0; i < del.length; i++) {
+      //     await removeMove(id, del[i].id);
+      //   }
+      //   for (let i = 0; i < resp.length; i++) {
+      //     this.newMoves(resp[i], id);
+      //   }
+      // }
     }
 
     console.log(current_experience);
@@ -203,16 +207,23 @@ class Battle extends Component {
 
   battleSequence = async () => {
     let formData = this.state.formData;
+    let levelUser = this.state.fighterPokemon.level;
+    let levelNpc = this.state.npc.level;
     let id = this.state.fighterPokemon.id;
     let npcHealth = this.state.npc.current_health;
     let halfHp = this.state.npc.health / 2;
     let randomNpcAttack = this.randomFunc(this.state.npcAttack);
-    let npcAttack = randomNpcAttack.attack;
+    let npcAttack = Math.floor(
+      randomNpcAttack.attack + randomNpcAttack.attack * levelNpc * 0.01
+    );
     let npcAnimation = randomNpcAttack.animation;
 
     let userHealth = this.state.fighterPokemon.current_health;
     let randomUserAttack = this.randomFunc(this.state.userPokemonAttacks);
-    let userAttack = randomUserAttack.attack;
+    let userAttack = Math.floor(
+      randomUserAttack.attack + randomUserAttack.attack * levelUser * 0.01
+    );
+    console.log(userAttack);
     let userAnimation = randomUserAttack.animation;
 
     this.setState({ userAnimation, userTurn: true });
@@ -336,7 +347,8 @@ class Battle extends Component {
     const hp = this.state.npc.current_health;
     const totalHp = this.state.fighterPokemon.health;
     const chance = totalHp * 0.12;
-    const dice = Math.floor(Math.random() * Math.floor(hp));
+    const dice = 10;
+    // Math.floor(Math.random() * Math.floor(hp));
 
     setTimeout(
       function() {
@@ -379,9 +391,6 @@ class Battle extends Component {
     };
     const resp = await update(id, passData);
     const fighterPokemon = await getPokemon(id);
-
-    console.log(userHealth);
-    console.log(fighterPokemon.current_health);
 
     const resp1 = await update(fighterPokemonID, formData);
 
@@ -467,7 +476,10 @@ class Battle extends Component {
                     )}
                   </div>
                   <div className="userB">
-                    <span>{this.state.fighterPokemon.name}</span>
+                    <span>
+                      LV{this.state.fighterPokemon.level}
+                      {this.state.fighterPokemon.name}
+                    </span>
                     <MaxHealthBar
                       percentage={this.state.fighterPokemon.current_health}
                     />
