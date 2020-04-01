@@ -18,7 +18,8 @@ class Trainer extends Component {
         current_health: null,
         health: null,
         current_experience: null,
-        total_experience: null
+        total_experience: null,
+        type: null
       }
     };
   }
@@ -39,7 +40,8 @@ class Trainer extends Component {
         current_health: pokemon[0].current_health,
         health: pokemon[0].health,
         current_experience: pokemon[0].current_experience,
-        total_experience: pokemon[0].total_experience
+        total_experience: pokemon[0].total_experience,
+        type: pokemon[0].type
       };
       this.setState({ pokemon, showPokemon, moves });
     }
@@ -62,6 +64,7 @@ class Trainer extends Component {
     const current_experience = pokemon.current_experience;
     const total_experience = pokemon.total_experience;
     const id = pokemon.id;
+    const type = pokemon.type;
 
     this.setState({
       isClicked: true,
@@ -76,7 +79,8 @@ class Trainer extends Component {
         current_experience,
         total_experience,
         health,
-        current_health
+        current_health,
+        type
       }
     });
   };
@@ -111,6 +115,7 @@ class Trainer extends Component {
                       src={this.state.showPokemon.frontImage}
                     />
                     <div className="pokemonDetails">
+                      <div>Type: {this.state.showPokemon.type}</div>
                       <div>
                         HP {this.state.showPokemon.current_health} /
                         {this.state.showPokemon.health}
@@ -129,7 +134,10 @@ class Trainer extends Component {
                   <div>
                     {this.state.moves.map(data => (
                       <div>
-                        {data.name}:{data.attack}
+                        <div>Type: {data.type}</div>
+                        <div>
+                          {data.name}:{data.attack}
+                        </div>
                       </div>
                     ))}
                   </div>

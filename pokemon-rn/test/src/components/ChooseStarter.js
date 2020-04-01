@@ -20,12 +20,14 @@ class ChooseStarter extends Component {
       moveData1: {
         name: null,
         attack: null,
-        isLearned: true
+        animation: null,
+        type: null
       },
       moveData2: {
         name: null,
         attack: null,
-        isLearned: true
+        animation: null,
+        type: null
       },
       formData: {
         name: null,
@@ -36,7 +38,8 @@ class ChooseStarter extends Component {
         level: 1,
         total_experience: 300,
         current_experience: 0,
-        fullyEvolved: null
+        fullyEvolved: null,
+        type: null
       },
       isClicked: false
     };
@@ -68,7 +71,8 @@ class ChooseStarter extends Component {
         ...this.state.moveData,
         name: moves[0].name,
         attack: moves[0].attack,
-        animation: moves[0].animation
+        animation: moves[0].animation,
+        type: moves[0].type
       }
     });
     this.setState({
@@ -76,7 +80,8 @@ class ChooseStarter extends Component {
         ...this.state.moveData,
         name: moves[1].name,
         attack: moves[1].attack,
-        animation: moves[1].animation
+        animation: moves[1].animation,
+        type: moves[1].type
       }
     });
     this.setState({
@@ -87,7 +92,8 @@ class ChooseStarter extends Component {
         backImage: pokemon.backImage,
         health: pokemon.health,
         current_health: pokemon.current_health,
-        fullyEvolved: pokemon.fullyEvolved
+        fullyEvolved: pokemon.fullyEvolved,
+        type: pokemon.type
       }
     });
     this.passMoves(moves);
@@ -104,13 +110,15 @@ class ChooseStarter extends Component {
         ...this.state.moveData1,
         name: moves[0].name,
         attack: moves[0].attack,
-        animation: moves[0].animation
+        animation: moves[0].animation,
+        type: moves[0].type
       },
       moveData2: {
         ...this.state.moveData2,
         name: moves[1].name,
         attack: moves[1].attack,
-        animation: moves[1].animation
+        animation: moves[1].animation,
+        type: moves[1].type
       }
     });
   };

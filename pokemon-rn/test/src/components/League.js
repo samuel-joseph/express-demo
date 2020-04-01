@@ -302,6 +302,7 @@ class League extends Component {
   };
 
   evolution = async () => {
+    let type = this.state.userPokemon.type;
     let userHealth = this.state.userPokemon.current_health;
     let fullyEvolved = this.state.userPokemon.fullyEvolved;
     let id = this.state.userPokemon.id;
@@ -355,7 +356,8 @@ class League extends Component {
       level,
       current_experience,
       frontImage,
-      backImage
+      backImage,
+      type
     };
     const resp = await update(id, passData);
   };
@@ -368,17 +370,33 @@ class League extends Component {
   }
 
   newMoves = async (moves, id) => {
-    console.log(moves);
     let postMoveCopy = {
       name: moves.name,
       attack: moves.attack,
-      isLearned: moves.isLearned
+      animation: moves.animation,
+      type: moves.type
     };
 
     let resp = await addMoves(id, postMoveCopy);
   };
 
+  // typeAdvantage = () => {
+
+  //   switch (type) {
+  //     case "Fire":
+  //       text = "Today is Saturday";
+  //       break;
+  //     case 0:
+  //       text = "Today is Sunday";
+  //       break;
+  //     default:
+  //       text = "Looking forward to the Weekend";
+  //   }
+  // };
+
   battleSequence = async () => {
+    let typeUser = this.state.userPokemon.type;
+    let typeNpc = this.state.npcPokemon.type;
     let levelUser = this.state.userPokemon.level;
     let levelNpc = this.state.npcPokemon.level;
     let formData = this.state.formData;
@@ -390,6 +408,9 @@ class League extends Component {
       randomNpcAttack.attack + randomNpcAttack.attack * levelNpc * 0.01
     );
     let npcAnimation = randomNpcAttack.animation;
+
+    console.log(typeNpc);
+    console.log(typeUser);
 
     let userHealth = this.state.userPokemon.current_health;
     let randomUserAttack = this.randomFunc(this.state.userMoves);

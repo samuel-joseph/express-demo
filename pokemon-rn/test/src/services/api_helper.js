@@ -114,3 +114,269 @@ export const removeMove = async (pokemonId, moveId) => {
   console.log("MOVE REMOVED");
   return;
 };
+
+
+export const useAdvantage = (moves, pokemon) => {
+  let answer = null;
+  let use = [];
+  for (let i = 0; i < moves.length; i++) {
+    let j = moves[i].type;
+    let k = typeAdvantage(j, pokemon);
+
+    if (k === 2) answer = j;
+  }
+  if (answer) {
+    for (let i = 0; i < moves.length; i++) {
+      if (moves[i].type === answer) {
+        use.push(moves[i]);
+      }
+    }
+    return use;
+  } else return moves;
+};
+
+export const typeAdvantage = (move, pokemon) => {
+  switch (move) {
+    case "Dragon":
+      switch (pokemon) {
+        case "Dragon":
+          return 2;
+        default:
+          return 1;
+      }
+    case "Ghost":
+      switch (pokemon) {
+        case "Normal":
+          return 0;
+        case "Psychic":
+          return 0;
+        case "Ghost":
+          return 2;
+        default:
+          return 1;
+      }
+    case "Rock":
+      switch (pokemon) {
+        case "Fire":
+          return 2;
+        case "Ice":
+          return 0.5;
+        case "Fighting":
+          return 0.5;
+        case "Flying":
+          return 2;
+        case "Ground":
+          return 0.5;
+        case "Ghost":
+          return 0.5;
+        default:
+          return 1;
+      }
+    case "Bug":
+      switch (pokemon) {
+        case "Fire":
+          return 0.5;
+        case "Grass":
+          return 2;
+        case "Fighting":
+          return 0.5;
+        case "Poison":
+          return 2;
+        case "Flying":
+          return 0.5;
+        case "Psychic":
+          return 2;
+        case "Ghost":
+          return 0.5;
+        default:
+          return 1;
+      }
+    case "Psychic":
+      switch (pokemon) {
+        case "Fighting":
+          return 2;
+        case "Poison":
+          return 2;
+        case "Psychic":
+          return 0.5;
+        default:
+          return 1;
+      }
+    case "Flying":
+      switch (pokemon) {
+        case "Electric":
+          return 0.5;
+        case "Grass":
+          return 2;
+        case "Fighting":
+          return 2;
+        case "Bug":
+          return 2;
+        case "Ghost":
+          return 0.5;
+        default:
+          return 1;
+      }
+    case "Ground":
+      switch (pokemon) {
+        case "Fire":
+          return 2;
+        case "Electric":
+          return 2;
+        case "Grass":
+          return 0.5;
+        case "Poison":
+          return 2;
+        case "Flying":
+          return 0;
+        case "Bug":
+          return 0.5;
+        case "Rock":
+          return 2;
+        default:
+          return 1;
+      }
+    case "Poison":
+      switch (pokemon) {
+        case "Grass":
+          return 2;
+        case "Ice":
+          return 2;
+        case "Grass":
+          return 0.5;
+        case "Poison":
+          return 0.5;
+        case "Ground":
+          return 0.5;
+        case "Bug":
+          return 2;
+        case "Rock":
+          return 0.5;
+        case "Ghost":
+          return 0.5;
+        default:
+          return 1;
+      }
+    case "Fighting":
+      switch (pokemon) {
+        case "Normal":
+          return 2;
+        case "Ice":
+          return 2;
+        case "Grass":
+          return 0.5;
+        case "Poison":
+          return 0.5;
+        case "Psychic":
+          return 0.5;
+        case "Flying":
+          return 0.5;
+        case "Bug":
+          return 0.5;
+        case "Rock":
+          return 2;
+        case "Ghost":
+          return 0;
+        default:
+          return 1;
+      }
+    case "Ice":
+      switch (pokemon) {
+        case "Water":
+          return 0.5;
+        case "Grass":
+          return 2;
+        case "Ice":
+          return 0.5;
+        case "Ground":
+          return 2;
+        case "Flying":
+          return 2;
+        case "Dragon":
+          return 2;
+        default:
+          return 1;
+      }
+    case "Grass":
+      switch (pokemon) {
+        case "Fire":
+          return 0.5;
+        case "Water":
+          return 2;
+        case "Grass":
+          return 0.5;
+        case "Poison":
+          return 0.5;
+        case "Ground":
+          return 2;
+        case "Flying":
+          return 0.5;
+        case "Dragon":
+          return 0.5;
+        default:
+          return 1;
+      }
+    case "Electric":
+      switch (pokemon) {
+        case "Water":
+          return 2;
+        case "Electric":
+          return 0.5;
+        case "Grass":
+          return 0.5;
+        case "Ground":
+          return 0;
+        case "Flying":
+          return 2;
+        case "Dragon":
+          return 0.5;
+        default:
+          return 1;
+      }
+    case "Water":
+      switch (pokemon) {
+        case "Fire":
+          return 2;
+        case "Water":
+          return 0.5;
+        case "Grass":
+          return 0.5;
+        case "Ground":
+          return 2;
+        case "Rock":
+          return 0.5;
+        case "Dragon":
+          return 0.5;
+        default:
+          return 1;
+      }
+    case "Fire":
+      switch (pokemon) {
+        case "Fire":
+          return 0.5;
+        case "Water":
+          return 0.5;
+        case "Grass":
+          return 2;
+        case "Ice":
+          return 2;
+        case "Bug":
+          return 2;
+        case "Rock":
+          return 0.5;
+        case "Dragon":
+          return 0.5;
+        default:
+          return 1;
+      }
+    case "Normal":
+      switch (pokemon) {
+        case "Rock":
+          return 0.5;
+        case "Ghost":
+          return 0;
+        default:
+          return 1;
+      }
+  }
+};
