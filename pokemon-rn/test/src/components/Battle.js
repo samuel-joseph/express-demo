@@ -60,7 +60,6 @@ class Battle extends Component {
     const fighterPokemon = userPokemon[0];
     const npcAttack = await getMoves(npc.id);
     const userPokemonAttacks = await getMoves(fighterPokemon.id);
-    console.log(userPokemonAttacks);
     const name = npc.name;
     const current_experience = npc.current_experience;
     const total_experience = npc.total_experience;
@@ -71,8 +70,8 @@ class Battle extends Component {
     const fullyEvolved = npc.fullyEvolved;
     const moveName = npcAttack.name;
     const moveAttack = npcAttack.attack;
-    const current_health = fighterPokemon.current_health;
-    const type = fighterPokemon.type;
+    const current_health = npc.current_health;
+    const type = npc.type;
     console.log(npc);
 
     this.setState({
@@ -168,21 +167,37 @@ class Battle extends Component {
         level++;
         health += 2;
         current_experience = current_experience - total_experience;
-      }
-      if (level === 15 || (level === 30 && fullyEvolved === false)) {
-        num++;
-        let getName = await getPokemon(num);
-        name = getName.name;
-        frontImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${num}.png`;
-        backImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon//back/${num}.png`;
-        let resp = await getMoves(num);
-        let del = await getMoves(id);
-        for (let i = 0; i < del.length; i++) {
-          await removeMove(id, del[i].id);
+
+        if ((level === 2 || level === 4) && fullyEvolved !== true) {
+          num++;
+          let getName = await getPokemon(num);
+          name = getName.name;
+          frontImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${num}.png`;
+          backImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon//back/${num}.png`;
+          let resp = await getMoves(num);
+          let del = await getMoves(id);
+          for (let i = 0; i < del.length; i++) {
+            await removeMove(id, del[i].id);
+          }
+          for (let i = 0; i < resp.length; i++) {
+            this.newMoves(resp[i], id);
+          }
         }
-        for (let i = 0; i < resp.length; i++) {
-          this.newMoves(resp[i], id);
-        }
+        // if (level === 4 && !fullyEvolved) {
+        //   num++;
+        //   let getName = await getPokemon(num);
+        //   name = getName.name;
+        //   frontImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${num}.png`;
+        //   backImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon//back/${num}.png`;
+        //   let resp = await getMoves(num);
+        //   let del = await getMoves(id);
+        //   for (let i = 0; i < del.length; i++) {
+        //     await removeMove(id, del[i].id);
+        //   }
+        //   for (let i = 0; i < resp.length; i++) {
+        //     this.newMoves(resp[i], id);
+        //   }
+        // }
       }
     }
 
@@ -195,7 +210,8 @@ class Battle extends Component {
       current_experience,
       frontImage,
       backImage,
-      type
+      type,
+      fullyEvolved
     };
     const resp = await update(id, passData);
   };
@@ -214,7 +230,9 @@ class Battle extends Component {
   };
 
   userAttack = (attacker, ms, receiver) => {
+    console.log(this.state.fighterPokemon);
     let npc = this.state.npc;
+    console.log(npc);
     let user = this.state.fighterPokemon;
     let userHealth = user.current_health;
     let userAnimation = null;
@@ -231,13 +249,21 @@ class Battle extends Component {
         1000
       );
       npcHealth = npcHealth - randomAttack.damage;
-
+      // console.log(npcHealth);
+      // console.log(randomAttack.damage);
       if (npcHealth < 0 || npcHealth === 0) {
         this.setState({
           npc: { ...npc, current_health: 0 }
         });
-
-        this.evolution();
+        setTimeout(
+          function() {
+            this.setState({
+              npc: { ...npc, current_health: npcHealth }
+            });
+            this.evolution();
+          }.bind(this),
+          650
+        );
       }
       setTimeout(
         function() {
@@ -247,6 +273,7 @@ class Battle extends Component {
         }.bind(this),
         650
       );
+      return npcHealth;
     } else {
       npcAnimation = randomAttack.animation;
       this.setState({ npcAnimation, npcTurn: true });
@@ -259,11 +286,35 @@ class Battle extends Component {
       userHealth = userHealth - randomAttack.damage;
 
       if (userHealth < 0 || userHealth === 0) {
+        // this.setState({
+        //   user: { ...user, current_health: 0 }
+        // });
+        let index = null;
+        const userPokemon = this.state.userPokemon;
+        // userPokemon.splice(index, 1);
+        const fighterPokemon = userPokemon.pop(0);
+        const passData = {
+          current_health: 0
+        };
+        if (this.state.userPokemon.length === 0) {
+          this.props.saySomething(
+            "YOU LOST... Go head to Pokecenter and heal those poor pokemons then try again"
+          );
+          // const resp = await update(user.id, passData);
+        } else {
+          for (let i = 0; i < this.state.userPokemon.length; i++) {
+            if (this.state.userPokemon[i].id === user.id) {
+              index = i;
+            }
+          }
+        }
         this.setState({
-          user: { ...user, current_health: 0 }
+          userPokemon,
+          fighterPokemon,
+          formData: { ...this.state.formData, current_health: userHealth },
+          win: true
         });
-
-        // this.evolution();
+        // return;
       }
       setTimeout(
         function() {
@@ -288,15 +339,30 @@ class Battle extends Component {
     let typeNpc = npc.type;
     let id = user.id;
     let npcHealth = npc.current_health;
+    let userHealth = user.current_health;
+
+    console.log(npc);
 
     // this.userAttack(npc, npcMS, user);
     if (levelUser >= levelNpc) {
-      this.userAttack(user, userMS, npc);
+      npcHealth = this.userAttack(user, userMS, npc);
+      if (npcHealth <= 0) {
+        console.log("DEAD");
+        return;
+      } else console.log("TEST");
       setTimeout(
         function() {
-          this.userAttack(npc, npcMS, user);
+          userHealth = this.userAttack(npc, npcMS, user);
         }.bind(this),
-        2500
+        1000
+      );
+    } else {
+      this.userAttack(npc, npcMS, user);
+      setTimeout(
+        function() {
+          this.userAttack(user, userMS, npc);
+        }.bind(this),
+        1000
       );
     }
 
@@ -375,9 +441,9 @@ class Battle extends Component {
     //     win: true
     //   });
     // } else {
-    //   const passData = {
-    //     current_health: userHealth
-    //   };
+    const passData = {
+      current_health: userHealth
+    };
     //   setTimeout(
     //     function() {
     //       this.setState({
@@ -391,7 +457,7 @@ class Battle extends Component {
     //     }.bind(this),
     //     2500
     //   );
-    //   const resp = await update(id, passData);
+    const resp = await update(id, passData);
     // }
   };
 
@@ -537,6 +603,7 @@ class Battle extends Component {
   storePokemon = async () => {
     const postData = this.state.postData;
     const postMove = this.state.postMove;
+    console.log(postData);
     const resp = await storePokemon(postData);
     for (let i = 0; i < postMove.length; i++) {
       const resp1 = await addMoves(resp.data.id, postMove[i]);
@@ -566,7 +633,6 @@ class Battle extends Component {
   };
 
   change = async pokemon => {
-    console.log(this.state.formData);
     const fighterPokemonID = this.state.fighterPokemon.id;
     const formData = this.state.formData;
     const id = pokemon.id;
@@ -598,6 +664,7 @@ class Battle extends Component {
     const resp1 = await update(fighterPokemonID, formData);
 
     const userPokemonAttacks = await getMoves(id);
+    console.log(userPokemonAttacks);
     setTimeout(
       function() {
         this.setState({
@@ -608,7 +675,7 @@ class Battle extends Component {
           }
         });
       }.bind(this),
-      2500
+      400
     );
   };
 
@@ -635,7 +702,7 @@ class Battle extends Component {
                         </div>
                       </div>
                       <div>
-                        {this.state.npc.current_health ? (
+                        {this.state.npc.current_health > 0 ? (
                           <img
                             className={
                               this.state.npcTurn ? "npcMove" : "npcPokemon"
@@ -647,7 +714,10 @@ class Battle extends Component {
                             }
                           />
                         ) : (
-                          <img className="npcPokemon" src={this.state.rip} />
+                          <img
+                            className="npcPokemonFade"
+                            src={this.state.npc.frontImage}
+                          />
                         )}
                       </div>
                     </div>
@@ -677,7 +747,10 @@ class Battle extends Component {
                         }
                       />
                     ) : (
-                      <img className="userPokemon" src={this.state.rip} />
+                      <img
+                        className="userPokemonFade"
+                        src={this.state.fighterPokemon.backImage}
+                      />
                     )}
                   </div>
                   <div className="userB">

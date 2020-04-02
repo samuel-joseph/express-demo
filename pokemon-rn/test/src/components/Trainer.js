@@ -65,6 +65,7 @@ class Trainer extends Component {
     const total_experience = pokemon.total_experience;
     const id = pokemon.id;
     const type = pokemon.type;
+    console.log(pokemon);
 
     this.setState({
       isClicked: true,
@@ -134,7 +135,6 @@ class Trainer extends Component {
                   <div>
                     {this.state.moves.map(data => (
                       <div>
-                        <div>Type: {data.type}</div>
                         <div>
                           {data.name}:{data.attack}
                         </div>

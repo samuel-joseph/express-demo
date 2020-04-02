@@ -285,6 +285,15 @@ h4 {
   width: 50vw;
 }
 
+.userPokemonFade {
+  width: 50vw;
+  animation-name: fade;
+  animation-delay: initial;
+  animation-duration: 3s;
+  animation-iteration-count: inherit;
+  opacity: 0;
+}
+
 .userB {
   display: flex;
   flex-direction: column;
@@ -417,6 +426,26 @@ h4 {
   animation-name: userAttack;
   animation-duration: 1s;
   animation-iteration-count: 1;
+}
+
+.npcPokemonFade {
+  width: 50vw;
+  margin-left: 25%;
+  animation-name: fade;
+  animation-delay: initial;
+  animation-duration: 3s;
+  animation-iteration-count: inherit;
+  opacity: 0;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 @keyframes npcAttack {
