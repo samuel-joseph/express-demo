@@ -8,7 +8,9 @@ import {
   removeMove,
   getChampion,
   ownedPokemon,
-  newChampion
+  newChampion,
+  typeAdvantage,
+  useAdvantage
 } from "../services/api_helper";
 
 import MaxHealthBar from "./maxHealthBar";
@@ -38,6 +40,7 @@ class League extends Component {
       npcTurn: false,
       isStart: false,
       isChamp: false,
+      battle: false,
       rip:
         "https://b7.pngbarn.com/png/250/103/headstone-grave-cemetery-rest-in-peace-grave-s-png-clip-art-thumbnail.png",
       formData: {
@@ -395,6 +398,7 @@ class League extends Component {
   // };
 
   battleSequence = async () => {
+    this.setState({ battle: true });
     let typeUser = this.state.userPokemon.type;
     let typeNpc = this.state.npcPokemon.type;
     let levelUser = this.state.userPokemon.level;
@@ -403,26 +407,44 @@ class League extends Component {
     let id = this.state.userPokemon.id;
     let npcHealth = this.state.npcPokemon.current_health;
     let halfHp = this.state.npcPokemon.health / 2;
-    let randomNpcAttack = this.randomFunc(this.state.npcMoves);
-    let npcAttack = Math.floor(
-      randomNpcAttack.attack + randomNpcAttack.attack * levelNpc * 0.01
+    let randomNpcAttack = this.randomFunc(
+      useAdvantage(this.state.npcMoves, typeUser)
     );
+    let npcAdvantage = typeAdvantage(randomNpcAttack.type, typeUser);
+    let npcAttack =
+      Math.floor(
+        randomNpcAttack.attack + randomNpcAttack.attack * levelNpc * 0.01
+      ) * npcAdvantage;
     let npcAnimation = randomNpcAttack.animation;
 
-    console.log(typeNpc);
-    console.log(typeUser);
-
     let userHealth = this.state.userPokemon.current_health;
-    let randomUserAttack = this.randomFunc(this.state.userMoves);
-    let userAttack = Math.floor(
-      randomUserAttack.attack + randomUserAttack.attack * levelUser * 0.01
+    let randomUserAttack = this.randomFunc(
+      useAdvantage(this.state.userMoves, typeNpc)
     );
+    let userAdvantage = typeAdvantage(randomUserAttack.type, typeNpc);
+    let userAttack =
+      Math.floor(
+        randomUserAttack.attack + randomUserAttack.attack * levelUser * 0.01
+      ) * userAdvantage;
     let userAnimation = randomUserAttack.animation;
 
+    let effective = "";
+    if (userAdvantage === 2) effective = "SUPER EFFECTIVE";
+    else if (userAdvantage === 0.5) effective = "not effective";
+
     this.setState({ userAnimation, userTurn: true });
+    this.props.saySomething(
+      `${this.state.userPokemon.name} uses ${randomUserAttack.name}! ${effective} deals ${userAttack}!`
+    );
+    effective = "";
+    if (npcAdvantage === 2) effective = "SUPER EFFECTIVE";
+    else if (npcAdvantage === 0.5) effective = "not effective";
     setTimeout(
       function() {
         this.setState({ userAnimation: null, userTurn: false });
+        this.props.saySomething(
+          `${this.state.npc.name} uses ${randomNpcAttack.name}! ${effective} deals ${npcAttack}!`
+        );
       }.bind(this),
       1000
     );
@@ -449,7 +471,6 @@ class League extends Component {
         }
       });
     }
-
     if (npcHealth <= 0 && userHealth <= 0) {
       setTimeout(
         function() {
@@ -472,13 +493,14 @@ class League extends Component {
         this.setState({
           npcPokemon,
           npc,
-          formData: { ...this.state.formData, current_health: userHealth }
+          formData: { ...this.state.formData, current_health: userHealth },
+          battle: false
         });
 
         const resp = await update(id, passData);
         console.log(this.state.npc.length);
       } else {
-        this.setState({ userWin: true, npcPokemon: null });
+        this.setState({ userWin: true, npcPokemon: null, battle: false });
       }
       this.evolution();
     } else if (userHealth < 0 || userHealth === 0) {
@@ -520,7 +542,8 @@ class League extends Component {
               current_health: userHealth
             },
             formData: { ...this.state.formData, current_health: userHealth },
-            npcPokemon: { ...this.state.npcPokemon, current_health: npcHealth }
+            npcPokemon: { ...this.state.npcPokemon, current_health: npcHealth },
+            battle: false
           });
         }.bind(this),
         2500
@@ -530,21 +553,27 @@ class League extends Component {
   };
 
   healAll = async () => {
-    const trainer = this.state.user;
+    // const trainer = this.state.user;
+    const user = this.state.user;
     let heal = this.state.heal;
     heal--;
-    for (let i = 0; i < trainer.length; i++) {
-      let id = trainer[i].id;
-      let fullHp = trainer[i].health;
+    for (let i = 0; i < user.length; i++) {
+      // let id = trainer[i].id;
+      let id = user[i].id;
+      let fullHp = user[i].health;
+      // let fullHp = trainer[i].health;
       let passData = {
         current_health: fullHp
       };
-      const regainHp = await update(id, passData);
+      this.setState([...user, { ...user[i], passData }]);
+
+      // const regainHp = await update(id, passData);
     }
-    const user = await trainerPokemon();
+    // const user = await trainerPokemon();
     const userPokemon = user.shift();
-    const userMoves = await getMoves(userPokemon);
-    this.setState({ heal, user, userPokemon, userMoves });
+    const userMoves = await getMoves(userPokemon.id);
+    this.setState({ userPokemon, userMoves });
+    // this.setState({ heal, user, userPokemon, userMoves });
   };
 
   change = async pokemon => {
@@ -568,6 +597,11 @@ class League extends Component {
     );
 
     const changedPokemon = await getPokemon(id);
+    this.props.saySomething(
+      `Trainer ${localStorage.getItem("name")} switches ${
+        this.state.userPokemon.name
+      } with ${changedPokemon.name}`
+    );
     let userHealth = changedPokemon.current_health;
     userHealth = userHealth - npcAttack;
     const passData = {
@@ -593,13 +627,9 @@ class League extends Component {
     );
   };
 
-  // nextBattle = () => {
-
-  // }
-
   render() {
     return (
-      <div>
+      <div className="league">
         {!this.state.isStart && (
           <div>
             <h4>GYM LEADER</h4>
@@ -617,7 +647,9 @@ class League extends Component {
                   <img className="four" src={data.image} />
                 ))}
             </div>
-            <button onClick={() => this.battleStart()}>START</button>
+            <button className="register" onClick={() => this.battleStart()}>
+              START
+            </button>
           </div>
         )}
 
@@ -655,9 +687,7 @@ class League extends Component {
                   this.state.user.map(data => (
                     <>
                       <img src={data.frontImage} />
-                      <MaxHealthBar
-                        percentage={this.state.userPokemon.current_health}
-                      />
+                      <MaxHealthBar percentage={data.current_health} />
                     </>
                   ))}
               </>
@@ -667,14 +697,6 @@ class League extends Component {
 
         {this.state.npcPokemon && (
           <div className="npc">
-            {this.state.npc.map((data, index) => (
-              <div key={index}>
-                <img
-                  onClick={() => this.change(data)}
-                  src="https://i.ya-webdesign.com/images/pokeball-pixel-png-2.png"
-                />
-              </div>
-            ))}
             <div>
               {this.state.userAnimation && (
                 <img className="userFX" src={this.state.userAnimation} />
@@ -684,10 +706,19 @@ class League extends Component {
                 <div className="npcA">
                   <div className="npcB">
                     <span>{this.state.npcPokemon.name}</span>
+                    {console.log(this.state.user)}
                     <div className="hpBar">
                       <MaxHealthBar
                         percentage={this.state.npcPokemon.current_health}
                       />
+                      {this.state.npc.map((data, index) => (
+                        <div key={index}>
+                          <img
+                            onClick={() => this.change(data)}
+                            src="https://i.ya-webdesign.com/images/pokeball-pixel-png-2.png"
+                          />
+                        </div>
+                      ))}
                     </div>
                   </div>
                   <div>
@@ -703,8 +734,14 @@ class League extends Component {
                     )}
                   </div>
                 </div>
-                <button onClick={() => this.battleSequence()}>FIGHT</button>
-
+                {!this.state.battle && (
+                  <button
+                    className="register1"
+                    onClick={() => this.battleSequence()}
+                  >
+                    FIGHT
+                  </button>
+                )}
                 <div>
                   <div className="userA">
                     <div>
@@ -740,14 +777,16 @@ class League extends Component {
                     )}
                   </div>
                 </div>
-                {this.state.user.map((data, index) => (
-                  <div key={index}>
-                    <img
-                      onClick={() => this.change(data)}
-                      src={this.state.user[index].frontImage}
-                    />
-                  </div>
-                ))}
+                <div className="sparePokemons">
+                  {this.state.user.map((data, index) => (
+                    <div key={index}>
+                      <img
+                        onClick={() => this.change(data)}
+                        src={this.state.user[index].frontImage}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

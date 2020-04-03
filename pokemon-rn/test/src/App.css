@@ -1,6 +1,7 @@
 .App {
   text-align: center;
   margin-top: 15%;
+  color: white;
 }
 
 .opening {
@@ -16,6 +17,18 @@
   margin-top: 5px;
   font-weight: bold;
   text-decoration: none;
+}
+
+.register1 {
+  background-color: blue;
+  color: white;
+  border: 2px solid black;
+  padding: 5%;
+  border-radius: 20px;
+  margin-top: 5px;
+  font-weight: bold;
+  text-decoration: none;
+  position: absolute;
 }
 
 .buttonsOpenning {
@@ -60,6 +73,8 @@ img {
 
 p {
   font-weight: bold;
+  padding: 2% 2%;
+  overflow: scroll;
 }
 
 .footer {
@@ -139,18 +154,20 @@ h4 {
 .moveContainer {
   display: flex;
   flex-direction: column;
-  justify-content: stretch;
+  justify-content: flex-start;
   align-items: center;
   height: 100%;
   width: 150%;
   overflow: scroll;
   border: 5px solid red;
   background-color: white;
+  color: black;
 }
 
 .movesets {
   margin-top: 20px;
   padding-bottom: 20px;
+  color: black;
 }
 
 .specificPokemon {
@@ -164,7 +181,7 @@ h4 {
   align-items: center;
 }
 .main {
-  background-color: gray;
+  background-color: black;
   height: 70vh;
   margin-top: 15vh;
   overflow: scroll;
@@ -175,15 +192,23 @@ h4 {
   flex-direction: column;
   padding-top: 20px;
   align-items: center;
+  background-image: linear-gradient(-180deg, red, blue);
 }
 
 .menuButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-stretch: narrower;
   width: 100%;
   font-size: 20pt;
   text-decoration: none;
   height: 10vh;
   border: 2px solid black;
+  color: white;
+  font-weight: bolder;
   margin-top: 2px;
+  background-color: black;
 }
 
 .forest {
@@ -192,10 +217,9 @@ h4 {
   justify-content: space-between;
 }
 
-/* .forestBat {
-  background-image: url("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/59239705-5ebf-4a7a-9dee-5dd305685980/d6x05hw-87e7f966-3270-4adc-b4cf-be2835ff0496.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzU5MjM5NzA1LTVlYmYtNGE3YS05ZGVlLTVkZDMwNTY4NTk4MFwvZDZ4MDVody04N2U3Zjk2Ni0zMjcwLTRhZGMtYjRjZi1iZTI4MzVmZjA0OTYucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.09t_AnSe0uaHfsLUlXvWe08J3arDAMlWFSnRzC7YbEo");
-  height: 100%;
-} */
+.forestBat {
+  background-image: linear-gradient(-60deg, green, black);
+}
 
 .grass {
   display: flex;
@@ -244,10 +268,17 @@ h4 {
 .npcPokemon {
   width: 50vw;
   margin-left: 25%;
+  /* animation-name: stallNpc;
+  animation-duration: 2s;
+  animation-iteration-count: infinite; */
 }
 
 .entireUser {
   height: 80%;
+}
+
+.pokeAtCenter {
+  width: 50%;
 }
 
 .userA {
@@ -268,8 +299,12 @@ h4 {
 }
 
 .healPoke {
-  margin-bottom: 10px;
-  width: 50%;
+  width: 100%;
+}
+
+.league {
+  /* background-image: url("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/2fb2821a-1406-4a1d-9b04-6668f278e944/d843fov-5ad2d436-789b-48f4-91ac-7a553ca26306.png"); */
+  background-image: linear-gradient(-180deg, red, blue);
 }
 
 .sparePokemons {
@@ -277,12 +312,31 @@ h4 {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background-color: gray;
-  height: 50%;
+  background-color: white;
+  height: 25%;
+}
+.sparePokemons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  height: 25%;
+}
+
+.sparePokemons1 {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  height: 25%;
 }
 
 .userPokemon {
   width: 50vw;
+  animation-name: stallUser;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
 }
 
 .userPokemonFade {
@@ -328,14 +382,11 @@ h4 {
   background-color: black;
 }
 
-.pokecenter0 {
+/* .pokecenter0 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin-top: 10px;
-  width: 75%;
-  margin-left: auto;
-  margin-right: auto;
-}
+} */
 
 .pokecenter1 {
   display: flex;
@@ -345,6 +396,7 @@ h4 {
 .gym {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .leader {
@@ -360,6 +412,7 @@ h4 {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .four {
@@ -397,7 +450,7 @@ h4 {
 .champContainer {
   display: flex;
   flex-direction: column;
-  padding: 5vh 10vw;
+  padding: 2vh 3vw;
   background-color: black;
   border-radius: 20px;
   border-style: groove;
@@ -445,6 +498,34 @@ h4 {
 
   100% {
     opacity: 0;
+  }
+}
+
+@keyframes stallNpc {
+  0% {
+    margin-left: 0%;
+  }
+
+  50% {
+    margin-left: 0%;
+  }
+
+  100% {
+    margin-left: 10%;
+  }
+}
+
+@keyframes stallUser {
+  0% {
+    margin-right: 0%;
+  }
+  45% {
+    margin-left: 3%;
+    /* margin-top: -10%; */
+  }
+  100% {
+    margin-left: 0%;
+    margin-top: 0%;
   }
 }
 

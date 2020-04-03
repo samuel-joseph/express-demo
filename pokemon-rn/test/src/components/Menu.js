@@ -23,23 +23,24 @@ export default class Menu extends Component {
     return (
       <div className="menu">
         <div className="champContainer">
-          {this.state.champion && (
-            <div>
-              <div>Pokemon Master {this.state.champion.username}</div>
-            </div>
+          <img src="https://i.gifer.com/6x6G.gif" />
+          {this.state.champion ? (
+            <h4>{this.state.champion.username}</h4>
+          ) : (
+            <>NO CHAMPION</>
           )}
         </div>
         <Link className="menuButton" to="/trainer">
-          Profile
+          PROFILE
         </Link>
         <Link className="menuButton" to="/forest">
-          Forest
+          FOREST
         </Link>
         <Link className="menuButton" to="/pokecenter">
-          Pokecenter
+          POKECENTER
         </Link>
         <Link className="menuButton" to="/league">
-          League
+          LEAGUE
         </Link>
       </div>
     );

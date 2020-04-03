@@ -64,7 +64,7 @@ class Pokecenter extends Component {
                     <img
                       className="healPoke"
                       onClick={() => this.show(data.id)}
-                      src="https://www.freeiconspng.com/uploads/pokeball-transparent-image-15.png"
+                      src="https://i.ya-webdesign.com/images/pokeball-pixel-png-2.png"
                     />
                   </div>
                 ))}
@@ -73,7 +73,9 @@ class Pokecenter extends Component {
           </div>
         )}
         {!this.state.isClicked && (
-          <button onClick={() => this.heal()}>HEAL</button>
+          <button className="register" onClick={() => this.heal()}>
+            HEAL
+          </button>
         )}
       </div>
     );

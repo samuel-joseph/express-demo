@@ -115,7 +115,6 @@ export const removeMove = async (pokemonId, moveId) => {
   return;
 };
 
-
 export const useAdvantage = (moves, pokemon) => {
   let answer = null;
   let use = [];
@@ -123,7 +122,7 @@ export const useAdvantage = (moves, pokemon) => {
     let j = moves[i].type;
     let k = typeAdvantage(j, pokemon);
 
-    if (k === 2) answer = j;
+    if (k === 2 || k == 1) answer = j;
   }
   if (answer) {
     for (let i = 0; i < moves.length; i++) {
@@ -344,7 +343,7 @@ export const typeAdvantage = (move, pokemon) => {
         case "Ground":
           return 2;
         case "Rock":
-          return 0.5;
+          return 2;
         case "Dragon":
           return 0.5;
         default:

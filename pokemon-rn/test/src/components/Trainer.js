@@ -54,7 +54,9 @@ class Trainer extends Component {
   };
 
   showMoves = async pokemon => {
-    this.props.saySomething(`This is your ${pokemon.name}`);
+    this.props.saySomething(
+      `This is your ${pokemon.name}, you can free your pokemon by pressing FREE button at the buttom.`
+    );
     const moves = await getMoves(pokemon.id);
     const frontImage = pokemon.frontImage;
     const level = pokemon.level;
