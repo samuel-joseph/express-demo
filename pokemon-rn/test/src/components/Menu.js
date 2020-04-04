@@ -14,6 +14,15 @@ export default class Menu extends Component {
 
   componentDidMount = async () => {
     const champion = await getChampion();
+    if (champion) {
+      this.props.saySomething(
+        `Here is the menu... The Reigning Pokemon Master is Trainer ${champion.name}! You can challenge him by battling at League!`
+      );
+    } else {
+      this.props.saySomething(
+        "Here is the menu... At this moment there is no Pokemon Champion in this league. You have to finish the League in order to be one."
+      );
+    }
     this.setState({
       champion
     });

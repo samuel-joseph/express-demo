@@ -15,6 +15,7 @@ import {
 } from "../services/api_helper";
 
 import Level from "./Level";
+import Evolution from "./Evolution";
 import Pokecenter from "./Pokecenter";
 import MaxHealthBar from "./maxHealthBar";
 import { FaSketch } from "react-icons/fa";
@@ -51,6 +52,7 @@ class Battle extends Component {
       userTurn: false,
       count: null,
       battle: false,
+      evolve: false,
       rip:
         "https://b7.pngbarn.com/png/250/103/headstone-grave-cemetery-rest-in-peace-grave-s-png-clip-art-thumbnail.png"
     };
@@ -125,19 +127,19 @@ class Battle extends Component {
     return response;
   }
 
-  newMoves = async (moves, id) => {
-    console.log(moves);
-    let postMoveCopy = {
-      name: moves.name,
-      attack: moves.attack,
-      animation: moves.animation,
-      type: moves.type
-    };
+  // newMoves = async (moves, id) => {
+  //   console.log(moves);
+  //   let postMoveCopy = {
+  //     name: moves.name,
+  //     attack: moves.attack,
+  //     animation: moves.animation,
+  //     type: moves.type
+  //   };
 
-    let resp = await addMoves(id, postMoveCopy);
+  //   let resp = await addMoves(id, postMoveCopy);
 
-    console.log(postMoveCopy);
-  };
+  //   console.log(postMoveCopy);
+  // };
 
   evolution = async () => {
     let userHealth = this.state.fighterPokemon.current_health;
@@ -149,7 +151,7 @@ class Battle extends Component {
     let health = this.state.fighterPokemon.health;
     let frontImage = this.state.fighterPokemon.frontImage;
     let backImage = this.state.fighterPokemon.backImage;
-    let num = frontImage.match(/\d+/g).map(Number);
+    // let num = frontImage.match(/\d+/g).map(Number);
     let name = this.state.fighterPokemon.name;
     let type = this.state.fighterPokemon.type;
 
@@ -177,21 +179,22 @@ class Battle extends Component {
         health += 2;
         current_experience = current_experience - total_experience;
       }
-      if ((level === 5 || level === 6) && fullyEvolved === false) {
-        num++;
-        let getName = await getPokemon(num);
-        name = getName.name;
-        frontImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${num}.png`;
-        backImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon//back/${num}.png`;
-        fullyEvolved = getName.fullyEvolved;
-        let resp = await getMoves(num);
-        let del = await getMoves(id);
-        for (let i = 0; i < del.length; i++) {
-          await removeMove(id, del[i].id);
-        }
-        for (let i = 0; i < resp.length; i++) {
-          this.newMoves(resp[i], id);
-        }
+      if ((level === 3 || level === 7) && fullyEvolved === false) {
+        this.setState({ evolve: true });
+        // num++;
+        // let getName = await getPokemon(num);
+        // name = getName.name;
+        // frontImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${num}.png`;
+        // backImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon//back/${num}.png`;
+        // fullyEvolved = getName.fullyEvolved;
+        // let resp = await getMoves(num);
+        // let del = await getMoves(id);
+        // for (let i = 0; i < del.length; i++) {
+        //   await removeMove(id, del[i].id);
+        // }
+        // for (let i = 0; i < resp.length; i++) {
+        //   this.newMoves(resp[i], id);
+        // }
       }
     }
 
@@ -228,10 +231,10 @@ class Battle extends Component {
       randomNpcAttack.type,
       this.state.fighterPokemon.type
     );
-    let npcAttack =
-      Math.floor(
-        randomNpcAttack.attack + randomNpcAttack.attack * levelNpc * 0.01
-      ) * npcAdvantage;
+    let npcAttack = Math.floor(
+      (randomNpcAttack.attack + randomNpcAttack.attack * levelNpc * 0.01) *
+        npcAdvantage
+    );
     let npcAnimation = randomNpcAttack.animation;
 
     let randomUserAttack = this.randomFunc(
@@ -385,8 +388,8 @@ class Battle extends Component {
     const hp = this.state.npc.current_health;
     const totalHp = this.state.fighterPokemon.health;
     const chance = totalHp * 0.1;
-    const dice =10
-      // Math.floor(Math.random() * Math.floor(hp));
+    const dice = 10;
+    // Math.floor(Math.random() * Math.floor(hp));
     this.props.saySomething(
       `Trainer ${localStorage.getItem("name")} throws a pokeball!`
     );
@@ -462,125 +465,153 @@ class Battle extends Component {
     return (
       <div>
         {this.state.userPokemon && (
-          <div>
-            {console.log(this.state.count)}
-            <div className="forestBat">
-              <div className="npc">
-                <div>
-                  {this.state.userAnimation && (
-                    <img className="userFX" src={this.state.userAnimation} />
-                  )}
-
+          <>
+            {!this.state.evolve ? (
+              <Evolution
+                saySomething={e => this.props.saySomething(e)}
+                pokemon={this.state.fighterPokemon}
+              />
+            ) : (
+              <>
+                {this.state.userPokemon && (
                   <div>
-                    <div className="npcA">
-                      <div className="npcB">
-                        <span>{this.state.npc.name}</span>
-                        <div className="hpBar">
-                          <MaxHealthBar
-                            percentage={this.state.npc.current_health}
-                          />
+                    {console.log(this.state.count)}
+                    <div className="forestBat">
+                      <div className="npc">
+                        <div>
+                          {this.state.userAnimation && (
+                            <img
+                              className="userFX"
+                              src={this.state.userAnimation}
+                            />
+                          )}
+
+                          <div>
+                            <div className="npcA">
+                              <div className="npcB">
+                                <span>{this.state.npc.name}</span>
+                                <div className="hpBar">
+                                  <MaxHealthBar
+                                    percentage={this.state.npc.current_health}
+                                  />
+                                </div>
+                              </div>
+                              <div>
+                                {this.state.npc.current_health ? (
+                                  <img
+                                    className={
+                                      this.state.npcTurn
+                                        ? "npcMove"
+                                        : "npcPokemon"
+                                    }
+                                    src={
+                                      this.state.catch
+                                        ? "https://i.ya-webdesign.com/images/pokeball-pixel-png-2.png"
+                                        : this.state.npc.frontImage
+                                    }
+                                  />
+                                ) : (
+                                  <img
+                                    className="npcPokemonFade"
+                                    src={this.state.npc.frontImage}
+                                  />
+                                )}
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
+                      {!this.state.battle && (
+                        <>
+                          {this.state.npc.current_health > 0 &&
+                            this.state.fighterPokemon.current_health > 0 && (
+                              <button
+                                className="register1"
+                                onClick={() => this.battleSequence()}
+                              >
+                                FIGHT
+                              </button>
+                            )}
+                        </>
+                      )}
                       <div>
-                        {this.state.npc.current_health ? (
-                          <img
-                            className={
-                              this.state.npcTurn ? "npcMove" : "npcPokemon"
-                            }
-                            src={
-                              this.state.catch
-                                ? "https://i.ya-webdesign.com/images/pokeball-pixel-png-2.png"
-                                : this.state.npc.frontImage
-                            }
-                          />
-                        ) : (
-                          <img
-                            className="npcPokemonFade"
-                            src={this.state.npc.frontImage}
-                          />
-                        )}
+                        <div className="userA">
+                          <div>
+                            {this.state.npcAnimation && (
+                              <img
+                                className="npcFX"
+                                src={this.state.npcAnimation}
+                              />
+                            )}
+
+                            {!this.state.fighterPokemon.current_health <= 0 ? (
+                              <img
+                                className={
+                                  this.state.userTurn
+                                    ? "userMove"
+                                    : "userPokemon"
+                                }
+                                src={
+                                  this.state.fighterPokemon.backImage
+                                    ? this.state.fighterPokemon.backImage
+                                    : this.state.rip
+                                }
+                              />
+                            ) : (
+                              <img
+                                className="userPokemon"
+                                src={this.state.rip}
+                              />
+                            )}
+                          </div>
+                          <div className="userB">
+                            <span>
+                              LV{this.state.fighterPokemon.level}
+                              {this.state.fighterPokemon.name}
+                            </span>
+                            <div className="hpBar">
+                              <MaxHealthBar
+                                percentage={
+                                  this.state.fighterPokemon.current_health
+                                }
+                              />
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-              {!this.state.battle && (
-                <>
-                  {this.state.npc.current_health > 0 &&
-                    this.state.fighterPokemon.current_health > 0 && (
-                      <button
-                        className="register1"
-                        onClick={() => this.battleSequence()}
-                      >
-                        FIGHT
-                      </button>
-                    )}
-                </>
-              )}
-              <div>
-                <div className="userA">
-                  <div>
-                    {this.state.npcAnimation && (
-                      <img className="npcFX" src={this.state.npcAnimation} />
-                    )}
 
-                    {!this.state.fighterPokemon.current_health <= 0 ? (
-                      <img
-                        className={
-                          this.state.userTurn ? "userMove" : "userPokemon"
-                        }
-                        src={
-                          this.state.fighterPokemon.backImage
-                            ? this.state.fighterPokemon.backImage
-                            : this.state.rip
-                        }
-                      />
-                    ) : (
-                      <img className="userPokemon" src={this.state.rip} />
-                    )}
+                    <>
+                      {this.state.userPokemon && (
+                        <div className="sparePokemons">
+                          {this.state.count !== 0 && (
+                            <span>
+                              <>
+                                <img
+                                  className="imagePoke1"
+                                  onClick={() => this.readyCatch()}
+                                  src="https://i.ya-webdesign.com/images/pokeball-pixel-png-2.png"
+                                />
+                                x{this.state.count}
+                              </>
+                            </span>
+                          )}
+                          {this.state.userPokemon.map((data, index) => (
+                            <div key={index}>
+                              <img
+                                onClick={() => this.change(data)}
+                                src={this.state.userPokemon[index].frontImage}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </>
                   </div>
-                  <div className="userB">
-                    <span>
-                      LV{this.state.fighterPokemon.level}
-                      {this.state.fighterPokemon.name}
-                    </span>
-                    <div className="hpBar">
-                      <MaxHealthBar
-                        percentage={this.state.fighterPokemon.current_health}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <>
-              {this.state.userPokemon && (
-                <div className="sparePokemons">
-                  {this.state.count !== 0 && (
-                    <span>
-                      <>
-                        <img
-                          className="imagePoke1"
-                          onClick={() => this.readyCatch()}
-                          src="https://i.ya-webdesign.com/images/pokeball-pixel-png-2.png"
-                        />
-                        x{this.state.count}
-                      </>
-                    </span>
-                  )}
-                  {this.state.userPokemon.map((data, index) => (
-                    <div key={index}>
-                      <img
-                        onClick={() => this.change(data)}
-                        src={this.state.userPokemon[index].frontImage}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          </div>
+                )}
+              </>
+            )}
+          </>
         )}
       </div>
     );

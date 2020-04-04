@@ -442,9 +442,6 @@ class League extends Component {
     setTimeout(
       function() {
         this.setState({ userAnimation: null, userTurn: false });
-        this.props.saySomething(
-          `${this.state.npc.name} uses ${randomNpcAttack.name}! ${effective} deals ${npcAttack}!`
-        );
       }.bind(this),
       1000
     );
@@ -528,7 +525,8 @@ class League extends Component {
         user,
         userPokemon,
         formData: { ...this.state.formData, current_health: 0 },
-        win: true
+        win: true,
+        battle: false
       });
     } else {
       const passData = {
@@ -620,7 +618,8 @@ class League extends Component {
           userMoves,
           formData: {
             current_health: userHealth
-          }
+          },
+          battle: false
         });
       }.bind(this),
       2500
@@ -687,7 +686,9 @@ class League extends Component {
                   this.state.user.map(data => (
                     <>
                       <img src={data.frontImage} />
-                      <MaxHealthBar percentage={data.current_health} />
+                      <MaxHealthBar
+                        percentage={this.state.userPokemon.current_health}
+                      />
                     </>
                   ))}
               </>

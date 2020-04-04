@@ -33,10 +33,10 @@ class Forest extends Component {
             // 32,
             // 133,
             // 147,
-            9,
-            9,
-            9,
-            9
+            144,
+            144,
+            144,
+            144
           ],
           rank: "low"
         },
