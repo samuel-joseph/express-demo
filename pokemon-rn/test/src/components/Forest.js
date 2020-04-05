@@ -15,28 +15,23 @@ class Forest extends Component {
             "https://i.pinimg.com/originals/2a/a2/0b/2aa20b2129a6b56fd02eb2d794a1a689.png",
           name: "Route 1-35",
           arrayPokemons: [
-            10,
-            // 13,
-            // 21,
-            // 37,
-            // 39,
-            // 41,
-            // 43,
-            // 69,
-            // 102,
-            // 129,
-            // 48,
-            // 58,
-            // 19,
-            // 16,
-            // 29,
-            // 32,
-            // 133,
-            // 147,
-            144,
-            144,
-            144,
-            144
+            13,
+            21,
+            37,
+            39,
+            41,
+            43,
+            69,
+            102,
+            129,
+            48,
+            58,
+            19,
+            16,
+            29,
+            32,
+            133,
+            147
           ],
           rank: "low"
         },
@@ -51,10 +46,15 @@ class Forest extends Component {
           image:
             "https://i.pinimg.com/originals/2a/a2/0b/2aa20b2129a6b56fd02eb2d794a1a689.png",
           name: "Route 75-100",
-          arrayPokemons: [42, 95, 108, 79, 126, 143],
+          arrayPokemons: [10],
+          // [42, 95, 108, 79, 126, 143],
           rank: "high"
         }
       ],
+      bonus: {
+        arrayPokemons: [147, 152],
+        rank: "bonus"
+      },
       pokemons: [],
       chosenPokemon: null,
       isClicked: false,
@@ -67,6 +67,7 @@ class Forest extends Component {
     this.props.saySomething(
       " Choose any of the forest then press HUNT button to either catch a pokemon or just battle! HAPPY HUNTING!"
     );
+    console.log(this.state.win);
   };
 
   resetMap = () => {
@@ -89,7 +90,6 @@ class Forest extends Component {
   };
 
   battle = () => {
-    console.log(this.state.rank);
     const arrayPokemons = this.state.pokemons;
     const chosenPokemon = this.state.pokemons[
       Math.floor(Math.random() * Math.floor(arrayPokemons.length - 1))

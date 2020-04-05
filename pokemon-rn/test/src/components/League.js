@@ -29,6 +29,7 @@ class League extends Component {
       heal: null,
       userWin: false,
       user: null,
+      userHealed: null,
       userPokemon: null,
       userMoves: null,
       npc: null,
@@ -196,9 +197,10 @@ class League extends Component {
       });
     }
     const user = await trainerPokemon();
+    const userHealed = user;
     const userPokemon = user[0];
     const userMoves = await getMoves(userPokemon.id);
-    this.setState({ user, userPokemon, userMoves, heal: 5 });
+    this.setState({ user, userHealed, userPokemon, userMoves, heal: 5 });
 
     const champion = await getChampion();
     console.log(champion);
@@ -214,7 +216,11 @@ class League extends Component {
   };
 
   newNpc = async enemy => {
-    console.log(enemy);
+    const user = this.state.userHealed;
+    const userPokemon = user[0];
+    const userMoves = await getMoves(userPokemon.id);
+    console.log(userPokemon)
+    this.setState({ user, userPokemon, userMoves });
     const npcContainer = enemy.shift();
     const npc = npcContainer.pokemon;
     const name = npcContainer.name;
@@ -707,7 +713,6 @@ class League extends Component {
                 <div className="npcA">
                   <div className="npcB">
                     <span>{this.state.npcPokemon.name}</span>
-                    {console.log(this.state.user)}
                     <div className="hpBar">
                       <MaxHealthBar
                         percentage={this.state.npcPokemon.current_health}

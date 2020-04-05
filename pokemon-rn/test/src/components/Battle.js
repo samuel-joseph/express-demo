@@ -151,65 +151,53 @@ class Battle extends Component {
     let health = this.state.fighterPokemon.health;
     let frontImage = this.state.fighterPokemon.frontImage;
     let backImage = this.state.fighterPokemon.backImage;
-    // let num = frontImage.match(/\d+/g).map(Number);
     let name = this.state.fighterPokemon.name;
     let type = this.state.fighterPokemon.type;
+    let presetXP = 1000;
+    let gain = null;
 
     switch (this.props.rank) {
       case "low":
-        current_experience = Math.floor(
-          current_experience + (total_experience * 3) / level
-        );
+        gain = Math.floor(presetXP * 2 * (1 + level * 0.075));
         break;
       case "medium":
-        current_experience = Math.floor(
-          current_experience + (total_experience * 4) / level
-        );
+        gain = Math.floor(presetXP * 3 * (1.75 + level * 0.075));
         break;
       case "high":
-        current_experience = Math.floor(
-          current_experience + (total_experience * 5) / level
-        );
+        gain = Math.floor(presetXP * 4);
+        break;
+      case "bonus":
+        gain = Math.floor(presetXP * 10 * (1.75 + level * 0.075));
         break;
     }
 
-    if (level < 100) {
+    this.props.saySomething(
+      `${this.state.fighterPokemon.name} earned ${gain} worth experiece!`
+    );
+    current_experience += gain;
+
+    if (level < 50) {
       while (current_experience >= total_experience) {
         level++;
         health += 2;
         current_experience = current_experience - total_experience;
-      }
-      if ((level === 3 || level === 7) && fullyEvolved === false) {
-        this.setState({ evolve: true });
-        // num++;
-        // let getName = await getPokemon(num);
-        // name = getName.name;
-        // frontImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${num}.png`;
-        // backImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon//back/${num}.png`;
-        // fullyEvolved = getName.fullyEvolved;
-        // let resp = await getMoves(num);
-        // let del = await getMoves(id);
-        // for (let i = 0; i < del.length; i++) {
-        //   await removeMove(id, del[i].id);
-        // }
-        // for (let i = 0; i < resp.length; i++) {
-        //   this.newMoves(resp[i], id);
-        // }
+        total_experience += 300;
+        if ((level === 15 || level === 30) && fullyEvolved === false) {
+          this.setState({ evolve: true });
+        }
       }
     }
 
-    console.log(current_experience);
     const passData = {
-      name,
+      // name,
       health,
       current_health: userHealth,
       level,
       current_experience,
-      fullyEvolved,
-      frontImage,
-      backImage,
-      type
+      current_health: health,
+      total_experience
     };
+    console.log(passData);
     const resp = await update(id, passData);
   };
 
@@ -262,33 +250,38 @@ class Battle extends Component {
     this.props.saySomething(
       `${this.state.fighterPokemon.name} uses ${randomUserAttack.name}! ${effective} deals ${userAttack}!`
     );
+
     effective = "";
     if (npcAdvantage === 2) effective = "SUPER EFFECTIVE";
     else if (npcAdvantage === 0.5) effective = "not effective";
+
+    npcHealth = npcHealth - userAttack;
+    userHealth = userHealth - npcAttack;
+
+    console.log(npcHealth);
     setTimeout(
       function() {
         this.setState({ userAnimation: null, userTurn: false });
-        this.props.saySomething(
-          `${this.state.npc.name} uses ${randomNpcAttack.name}! ${effective} deals ${npcAttack}!`
-        );
       }.bind(this),
       1000
     );
     setTimeout(
       function() {
         this.setState({ npcAnimation, npcTurn: true });
+
+        this.props.saySomething(
+          `${this.state.npc.name} uses ${randomNpcAttack.name}! ${effective} deals ${npcAttack}!`
+        );
       }.bind(this),
       1000
     );
+
     setTimeout(
       function() {
         this.setState({ npcAnimation: null, npcTurn: false });
       }.bind(this),
       2000
     );
-
-    npcHealth = npcHealth - userAttack;
-    userHealth = userHealth - npcAttack;
 
     if (formData.current_health !== userHealth) {
       this.setState({
@@ -317,6 +310,7 @@ class Battle extends Component {
         npc: { ...this.state.npc, current_health: 0 },
         formData: { ...this.state.formData, current_health: userHealth }
       });
+      // let dice = Math.floor(Math.random() * 11);
 
       const resp = await update(id, passData);
       this.evolution();
@@ -466,7 +460,7 @@ class Battle extends Component {
       <div>
         {this.state.userPokemon && (
           <>
-            {!this.state.evolve ? (
+            {this.state.evolve ? (
               <Evolution
                 saySomething={e => this.props.saySomething(e)}
                 pokemon={this.state.fighterPokemon}

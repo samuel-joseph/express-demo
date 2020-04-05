@@ -86,9 +86,20 @@ class Evolution extends Component {
     // let moves = await getMoves(id);
     setTimeout(
       function() {
-        this.props.saySomething(
-          `CONGRATULATIONS! Your ${this.state.prevPokemon.name} evolved into ${this.state.pokemon.name}!`
-        );
+        if (this.state.moves.length > 4) {
+          this.props.saySomething(
+            `CONGRATULATIONS! Your ${
+              this.state.prevPokemon.name
+            } evolved into ${this.state.pokemon.name}! However, ${
+              this.state.pokemon.name
+            } have more than 4 moves, delete ${this.state.moves.length -
+              4} to continue!`
+          );
+        } else {
+          this.props.saySomething(
+            `CONGRATULATIONS! Your ${this.state.prevPokemon.name} evolved into ${this.state.pokemon.name}!`
+          );
+        }
         this.setState({ movesLoad: true });
       }.bind(this),
       5000
@@ -99,8 +110,19 @@ class Evolution extends Component {
     console.log(move);
     let id = this.props.pokemon.id;
     let moves = this.state.moves;
-
     moves.splice(index, 1);
+    if (this.state.moves.length > 4) {
+      this.props.saySomething(
+        `${move.name} is removed from ${
+          this.state.pokemon.name
+        }. ${moves.length - 4} more!`
+      );
+    } else {
+      this.props.saySomething(
+        `Thank you Trainer ${localStorage.getItem("name")}!`
+      );
+    }
+
     this.setState({ moves });
     const resp = await removeMove(id, move.id);
   };
@@ -127,12 +149,15 @@ class Evolution extends Component {
                 this.state.moves.map((move, index) => (
                   <div key={index} className="evolveMovesA">
                     <div>{move.name}</div>
+                    <div>{move.attack}</div>
                     {this.state.moves.length > 4 && (
-                      <button onClick={e => this.delete(index, move)}>
+                      <button
+                        className="deleteMove"
+                        onClick={e => this.delete(index, move)}
+                      >
                         DEL
                       </button>
                     )}
-                    <div>{move.attack}</div>
                   </div>
                 ))}
             </div>

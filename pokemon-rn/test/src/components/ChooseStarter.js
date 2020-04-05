@@ -15,6 +15,8 @@ class ChooseStarter extends Component {
       ownPokemon: null,
       chosenPokemonId: null,
       starters: [],
+      riolu: null,
+      rioluMoves: null,
       starterMoves: [],
       arrayMoveData: [],
       moveData1: {
@@ -55,12 +57,16 @@ class ChooseStarter extends Component {
       starters.push(resp);
       starterMoves.push(resp1);
     }
+    const riolu = await getPokemon(152);
+    const rioluMoves = await getMoves(152);
     console.log(starters);
     this.props.saySomething("Choose a starter pokemon");
-    this.setState({ starters, starterMoves });
+    this.setState({ starters, starterMoves, riolu, rioluMoves });
   };
 
   chosenPokemon = (pokemon, moves) => {
+    console.log(pokemon);
+    console.log(moves);
     const chosenPokemonId = pokemon.id;
     const starterMoves = [];
 
