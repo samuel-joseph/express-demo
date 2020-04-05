@@ -26,7 +26,6 @@ class League extends Component {
         image: null,
         message: null
       },
-      heal: null,
       userWin: false,
       user: null,
       userHealed: null,
@@ -219,7 +218,7 @@ class League extends Component {
     const user = this.state.userHealed;
     const userPokemon = user[0];
     const userMoves = await getMoves(userPokemon.id);
-    console.log(userPokemon)
+    console.log(userPokemon);
     this.setState({ user, userPokemon, userMoves });
     const npcContainer = enemy.shift();
     const npc = npcContainer.pokemon;
@@ -389,20 +388,6 @@ class League extends Component {
     let resp = await addMoves(id, postMoveCopy);
   };
 
-  // typeAdvantage = () => {
-
-  //   switch (type) {
-  //     case "Fire":
-  //       text = "Today is Saturday";
-  //       break;
-  //     case 0:
-  //       text = "Today is Sunday";
-  //       break;
-  //     default:
-  //       text = "Looking forward to the Weekend";
-  //   }
-  // };
-
   battleSequence = async () => {
     this.setState({ battle: true });
     let typeUser = this.state.userPokemon.type;
@@ -556,30 +541,6 @@ class League extends Component {
     }
   };
 
-  healAll = async () => {
-    // const trainer = this.state.user;
-    const user = this.state.user;
-    let heal = this.state.heal;
-    heal--;
-    for (let i = 0; i < user.length; i++) {
-      // let id = trainer[i].id;
-      let id = user[i].id;
-      let fullHp = user[i].health;
-      // let fullHp = trainer[i].health;
-      let passData = {
-        current_health: fullHp
-      };
-      this.setState([...user, { ...user[i], passData }]);
-
-      // const regainHp = await update(id, passData);
-    }
-    // const user = await trainerPokemon();
-    const userPokemon = user.shift();
-    const userMoves = await getMoves(userPokemon.id);
-    this.setState({ userPokemon, userMoves });
-    // this.setState({ heal, user, userPokemon, userMoves });
-  };
-
   change = async pokemon => {
     const fighterPokemonID = this.state.userPokemon.id;
     const formData = this.state.formData;
@@ -678,15 +639,7 @@ class League extends Component {
                   />
                   <p>{this.state.currentNpc.message}</p>
                 </div>
-                {this.state.heal !== 0 && (
-                  <>
-                    <img
-                      onClick={() => this.healAll()}
-                      src="https://i.ya-webdesign.com/images/pixel-potion-png-4.png"
-                    />
-                    x{this.state.heal}
-                  </>
-                )}
+
                 <button onClick={() => this.battleStart()}>PROCEED</button>
                 {this.state.user &&
                   this.state.user.map(data => (
