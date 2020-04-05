@@ -88,6 +88,7 @@ export const ownedPokemon = async id => {
 
 export const addMoves = async (id, moveData) => {
   let resp = await api.post(`/pokemons/${id}/moves`, moveData);
+  console.log(resp);
   return resp;
 };
 

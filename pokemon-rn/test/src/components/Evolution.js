@@ -19,14 +19,15 @@ class Evolution extends Component {
       prevPokemon: null,
       isClick: false,
       moves: null,
-      movesLoad: false
+      movesLoad: false,
+      testMoves: null,
+      testMovesF: null
     };
   }
 
   componentDidMount = async () => {
     let prevPokemon = this.props.pokemon;
     this.props.saySomething(`Your ${prevPokemon.name} is about to evolve!!!`);
-    console.log(prevPokemon);
     let num = prevPokemon.frontImage.match(/\d+/g).map(Number);
     let id = prevPokemon.id;
 
@@ -41,12 +42,15 @@ class Evolution extends Component {
     let fullyEvolved = evolvePokemon.fullyEvolved;
     let resp = await getMoves(num);
     let del = await getMoves(id);
+    let testMoves = [];
     for (let i = 0; i < del.length; i++) {
       await removeMove(id, del[i].id);
     }
     for (let i = 0; i < resp.length; i++) {
+      testMoves.push(resp[i]);
       this.newMoves(resp[i], id);
     }
+    console.log(testMoves);
 
     const passData = {
       name,
@@ -60,7 +64,7 @@ class Evolution extends Component {
     };
     const resp1 = await update(id, passData);
     let pokemon = await getPokemon(id);
-    this.setState({ pokemon, prevPokemon });
+    this.setState({ pokemon, prevPokemon, testMoves });
   };
 
   newMoves = async (moves, id) => {
@@ -91,14 +95,26 @@ class Evolution extends Component {
     );
   };
 
+  delete = async (index, move) => {
+    console.log(move);
+    let id = this.props.pokemon.id;
+    let moves = this.state.moves;
+
+    moves.splice(index, 1);
+    this.setState({ moves });
+    const resp = await removeMove(id, move.id);
+  };
+
   render() {
     return (
       <div>
         {this.state.pokemon && (
           <div className="evolveContainer">
+            {/* {this.state.testMoves && <>{console.log(this.state.testMoves)}</>} */}
             {this.state.isClick && (
               <img className="evolved" src={this.state.pokemon.frontImage} />
             )}
+            {console.log(this.state.moves)}
             <img
               className={this.state.isClick ? "faded" : "prevPokemon"}
               src={this.state.prevPokemon.frontImage}
@@ -108,12 +124,14 @@ class Evolution extends Component {
             )}
             <div className={this.state.movesLoad ? "evolveMoves" : ""}>
               {this.state.movesLoad &&
-                this.state.moves.map(move => (
-                  <div className="evolveMovesA">
-                    {/* <div className="evolveMovesB"> */}
+                this.state.moves.map((move, index) => (
+                  <div key={index} className="evolveMovesA">
                     <div>{move.name}</div>
-                    <div>{move.type}</div>
-                    {/* </div> */}
+                    {this.state.moves.length > 4 && (
+                      <button onClick={e => this.delete(index, move)}>
+                        DEL
+                      </button>
+                    )}
                     <div>{move.attack}</div>
                   </div>
                 ))}

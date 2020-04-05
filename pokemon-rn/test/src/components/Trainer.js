@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import { Link, Route, withRouter } from "react-router-dom";
 
-import { trainerPokemon, getMoves, remove } from "../services/api_helper";
+import {
+  trainerPokemon,
+  getMoves,
+  remove,
+  removeMove
+} from "../services/api_helper";
 
 class Trainer extends Component {
   constructor(props) {
@@ -88,6 +93,16 @@ class Trainer extends Component {
     });
   };
 
+  delete = async (index, move) => {
+    console.log(move);
+    let id = this.props.pokemon.id;
+    let moves = this.state.moves;
+
+    moves.splice(index, 1);
+    this.setState({ moves });
+    const resp = await removeMove(id, move.id);
+  };
+
   render() {
     return (
       <div className="typeA">
@@ -135,11 +150,16 @@ class Trainer extends Component {
                 <h4>MOVES</h4>
                 {this.state.moves && (
                   <div>
-                    {this.state.moves.map(data => (
-                      <div>
+                    {this.state.moves.map((data, index) => (
+                      <div key={index}>
                         <div>
                           {data.name}:{data.attack}
                         </div>
+                        {this.state.moves.length > 4 && (
+                          <button onClick={e => this.delete(index, data)}>
+                            DEL
+                          </button>
+                        )}
                       </div>
                     ))}
                   </div>
