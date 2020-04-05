@@ -34,7 +34,10 @@ export default class Menu extends Component {
         <div className="champContainer">
           <img src="https://i.gifer.com/6x6G.gif" />
           {this.state.champion ? (
-            <h4>{this.state.champion.username}</h4>
+            <>
+              <h4>{this.state.champion.username}</h4>
+              <div className="pokemonMaster">POKEMON MASTER</div>
+            </>
           ) : (
             <>NO CHAMPION</>
           )}

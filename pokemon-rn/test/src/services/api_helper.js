@@ -116,14 +116,23 @@ export const removeMove = async (pokemonId, moveId) => {
 };
 
 export const useAdvantage = (moves, pokemon) => {
+  console.log(moves);
   let answer = null;
   let use = [];
   for (let i = 0; i < moves.length; i++) {
     let j = moves[i].type;
     let k = typeAdvantage(j, pokemon);
 
-    if (k === 2 || k == 1) answer = j;
+    if (k === 2) answer = j;
   }
+  if (!answer) {
+    for (let i = 0; i < moves.length; i++) {
+      let j = moves[i].type;
+      let k = typeAdvantage(j, pokemon);
+
+      if (k === 1) answer = j;
+    }
+  } 
   if (answer) {
     for (let i = 0; i < moves.length; i++) {
       if (moves[i].type === answer) {

@@ -228,12 +228,14 @@ class Battle extends Component {
     let randomUserAttack = this.randomFunc(
       useAdvantage(this.state.userPokemonAttacks, typeNpc)
     );
+    console.log(this.state.userPokemonAttacks);
 
     let userHealth = this.state.fighterPokemon.current_health;
     let userAdvantage = typeAdvantage(
       randomUserAttack.type,
       this.state.npc.type
     );
+    console.log(userAdvantage);
 
     let userAttack = Math.floor(
       (randomUserAttack.attack + randomUserAttack.attack * levelUser * 0.01) *
@@ -291,18 +293,19 @@ class Battle extends Component {
       });
     }
 
-    if (npcHealth <= 0 && userHealth <= 0) {
-      setTimeout(
-        function() {
-          this.setState({
-            npc: { ...this.state.npc, current_health: 0 },
-            fighterPokemon: { ...this.state.user, current_health: 0 },
-            formData: { ...this.state.formData, current_health: userHealth }
-          });
-        }.bind(this),
-        2000
-      );
-    } else if (npcHealth < 0 || npcHealth === 0) {
+    // if (npcHealth <= 0 && userHealth <= 0) {
+    //   setTimeout(
+    //     function() {
+    //       this.setState({
+    //         npc: { ...this.state.npc, current_health: 0 },
+    //         fighterPokemon: { ...this.state.user, current_health: 0 },
+    //         formData: { ...this.state.formData, current_health: userHealth }
+    //       });
+    //     }.bind(this),
+    //     2000
+    //   );
+    // }
+    if (npcHealth < 0 || npcHealth === 0) {
       const passData = {
         current_health: userHealth
       };

@@ -343,6 +343,14 @@ h4 {
 .userPokemonFade {
   width: 50vw;
   animation-name: fade;
+  animation-duration: 1.5s;
+  animation-delay: initial;
+  animation-iteration-count: infinite;
+}
+
+.userPokemonFade {
+  width: 50vw;
+  animation-name: fade;
   animation-delay: initial;
   animation-duration: 3s;
   animation-iteration-count: inherit;
@@ -554,6 +562,11 @@ h4 {
   border-radius: 20px;
   font-weight: bold;
   text-decoration: none;
+}
+
+.pokemonMaster {
+  font-size: 8pt;
+  font-weight: bolder;
 }
 
 @keyframes evolved {
