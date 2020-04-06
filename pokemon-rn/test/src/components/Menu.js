@@ -16,7 +16,7 @@ export default class Menu extends Component {
     const champion = await getChampion();
     if (champion) {
       this.props.saySomething(
-        `Here is the menu... The Reigning Pokemon Master is Trainer ${champion.name}! You can challenge him by battling at League!`
+        `Here is the menu... Be the greatest trainer by defeating the Reigning Champion!`
       );
     } else {
       this.props.saySomething(

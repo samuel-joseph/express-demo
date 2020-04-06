@@ -77,7 +77,7 @@ export const trainerPokemon = async () => {
 
 export const getMoves = async id => {
   let resp = await api.get(`/pokemons/${id}/moves`);
-  console.log("GET MOVE");
+  console.log(resp);
   return resp.data.moves;
 };
 
@@ -132,7 +132,7 @@ export const useAdvantage = (moves, pokemon) => {
 
       if (k === 1) answer = j;
     }
-  } 
+  }
   if (answer) {
     for (let i = 0; i < moves.length; i++) {
       if (moves[i].type === answer) {

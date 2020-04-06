@@ -215,7 +215,9 @@ class League extends Component {
     const message = npcContainer.message;
 
     const npcPokemon = npc.shift();
+    console.log(npcPokemon.id);
     const npcMoves = await getMoves(npcPokemon.id);
+
     this.setState({
       currentNpc: {
         name,
@@ -389,13 +391,14 @@ class League extends Component {
     let randomNpcAttack = this.randomFunc(
       useAdvantage(this.state.npcMoves, typeUser)
     );
+    console.log(this.state.npcMoves);
     let npcAdvantage = typeAdvantage(randomNpcAttack.type, typeUser);
     let npcAttack =
       Math.floor(
-        randomNpcAttack.attack + randomNpcAttack.attack * levelNpc * 0.01
+        randomNpcAttack.attack + randomNpcAttack.attack * levelNpc * 0.1
       ) * npcAdvantage;
     let npcAnimation = randomNpcAttack.animation;
-
+    console.log(randomNpcAttack.type);
     let userHealth = this.state.userPokemon.current_health;
     let randomUserAttack = this.randomFunc(
       useAdvantage(this.state.userMoves, typeNpc)
@@ -403,7 +406,7 @@ class League extends Component {
     let userAdvantage = typeAdvantage(randomUserAttack.type, typeNpc);
     let userAttack =
       Math.floor(
-        randomUserAttack.attack + randomUserAttack.attack * levelUser * 0.01
+        randomUserAttack.attack + randomUserAttack.attack * levelUser * 0.1
       ) * userAdvantage;
     let userAnimation = randomUserAttack.animation;
 
@@ -424,6 +427,7 @@ class League extends Component {
       }.bind(this),
       1000
     );
+
     setTimeout(
       function() {
         if (this.state.npcPokemon) {
@@ -705,6 +709,7 @@ class League extends Component {
                     </div>
                   </div>
                   <div>
+                    {console.log(this.state.npcMoves)}
                     {this.state.npcPokemon.current_health ? (
                       <img
                         className={
