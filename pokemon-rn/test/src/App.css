@@ -728,3 +728,9 @@ h4 {
     margin-top: 0%;
   }
 }
+
+@media only screen and (min-width: 600px) {
+  .main {
+    background-color: black;
+  }
+}

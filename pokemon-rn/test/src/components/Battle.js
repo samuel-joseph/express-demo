@@ -11,7 +11,7 @@ import {
   getPokemon,
   removeMove,
   typeAdvantage,
-  useAdvantage
+  useAdvantage,
 } from "../services/api_helper";
 
 import Level from "./Level";
@@ -34,7 +34,7 @@ class Battle extends Component {
         backImage: null,
         health: null,
         current_health: null,
-        type: null
+        type: null,
       },
       postMove: [],
       arrayPostMoves: [],
@@ -45,7 +45,7 @@ class Battle extends Component {
       catch: false,
       change: false,
       formData: {
-        current_health: null
+        current_health: null,
       },
       win: false,
       npcTurn: false,
@@ -54,7 +54,7 @@ class Battle extends Component {
       battle: false,
       evolve: false,
       rip:
-        "https://b7.pngbarn.com/png/250/103/headstone-grave-cemetery-rest-in-peace-grave-s-png-clip-art-thumbnail.png"
+        "https://b7.pngbarn.com/png/250/103/headstone-grave-cemetery-rest-in-peace-grave-s-png-clip-art-thumbnail.png",
     };
   }
 
@@ -102,11 +102,11 @@ class Battle extends Component {
         total_experience,
         current_experience,
         fullyEvolved,
-        type
+        type,
       },
       formData: {
-        current_health
-      }
+        current_health,
+      },
     });
 
     for (let i = 0; i < npcAttack.length; i++) {
@@ -114,10 +114,10 @@ class Battle extends Component {
         name: npcAttack[i].name,
         attack: npcAttack[i].attack,
         animation: npcAttack[i].animation,
-        type: npcAttack[i].type
+        type: npcAttack[i].type,
       };
-      this.setState(prevState => ({
-        postMove: [postMoveCopy, ...prevState.postMove]
+      this.setState((prevState) => ({
+        postMove: [postMoveCopy, ...prevState.postMove],
       }));
     }
   };
@@ -195,7 +195,7 @@ class Battle extends Component {
       level,
       current_experience,
       current_health: health,
-      total_experience
+      total_experience,
     };
     console.log(passData);
     const resp = await update(id, passData);
@@ -215,6 +215,8 @@ class Battle extends Component {
     let randomNpcAttack = this.randomFunc(
       useAdvantage(this.state.npcAttack, typeUser)
     );
+
+    console.log(this.state.npcAttack);
     let npcAdvantage = typeAdvantage(
       randomNpcAttack.type,
       this.state.fighterPokemon.type
@@ -262,13 +264,13 @@ class Battle extends Component {
 
     console.log(npcHealth);
     setTimeout(
-      function() {
+      function () {
         this.setState({ userAnimation: null, userTurn: false });
       }.bind(this),
       1000
     );
     setTimeout(
-      function() {
+      function () {
         this.setState({ npcAnimation, npcTurn: true });
 
         this.props.saySomething(
@@ -279,7 +281,7 @@ class Battle extends Component {
     );
 
     setTimeout(
-      function() {
+      function () {
         this.setState({ npcAnimation: null, npcTurn: false });
       }.bind(this),
       2000
@@ -288,8 +290,8 @@ class Battle extends Component {
     if (formData.current_health !== userHealth) {
       this.setState({
         formData: {
-          current_health: userHealth
-        }
+          current_health: userHealth,
+        },
       });
     }
 
@@ -307,11 +309,11 @@ class Battle extends Component {
     // }
     if (npcHealth < 0 || npcHealth === 0) {
       const passData = {
-        current_health: userHealth
+        current_health: userHealth,
       };
       this.setState({
         npc: { ...this.state.npc, current_health: 0 },
-        formData: { ...this.state.formData, current_health: userHealth }
+        formData: { ...this.state.formData, current_health: userHealth },
       });
       // let dice = Math.floor(Math.random() * 11);
 
@@ -323,7 +325,7 @@ class Battle extends Component {
       // userPokemon.splice(index, 1);
       const fighterPokemon = userPokemon.pop(0);
       const passData = {
-        current_health: 0
+        current_health: 0,
       };
       if (this.state.userPokemon.length === 0) {
         this.props.saySomething(
@@ -341,22 +343,22 @@ class Battle extends Component {
         userPokemon,
         fighterPokemon,
         formData: { ...this.state.formData, current_health: userHealth },
-        win: true
+        win: true,
       });
     } else {
       const passData = {
-        current_health: userHealth
+        current_health: userHealth,
       };
       setTimeout(
-        function() {
+        function () {
           this.setState({
             fighterPokemon: {
               ...this.state.fighterPokemon,
-              current_health: userHealth
+              current_health: userHealth,
             },
             formData: { ...this.state.formData, current_health: userHealth },
             npc: { ...this.state.npc, current_health: npcHealth },
-            battle: false
+            battle: false,
           });
         }.bind(this),
         2500
@@ -392,7 +394,7 @@ class Battle extends Component {
     );
 
     setTimeout(
-      function() {
+      function () {
         if (dice <= chance) {
           this.props.saySomething(`You caught a ${this.state.npc.name}!`);
           this.storePokemon();
@@ -405,7 +407,7 @@ class Battle extends Component {
     );
   };
 
-  change = async pokemon => {
+  change = async (pokemon) => {
     console.log(this.state.formData);
     const fighterPokemonID = this.state.fighterPokemon.id;
     const formData = this.state.formData;
@@ -414,13 +416,13 @@ class Battle extends Component {
     let npcAttack = randomNpcAttack.attack;
     let npcAnimation = randomNpcAttack.animation;
     setTimeout(
-      function() {
+      function () {
         this.setState({ npcAnimation, npcTurn: true });
       }.bind(this),
       1500
     );
     setTimeout(
-      function() {
+      function () {
         this.setState({ npcAnimation: null, npcTurn: false });
       }.bind(this),
       2500
@@ -435,7 +437,7 @@ class Battle extends Component {
     let userHealth = changedPokemon.current_health;
     userHealth = userHealth - npcAttack;
     const passData = {
-      current_health: userHealth
+      current_health: userHealth,
     };
     const resp = await update(id, passData);
     const fighterPokemon = await getPokemon(id);
@@ -444,14 +446,14 @@ class Battle extends Component {
 
     const userPokemonAttacks = await getMoves(id);
     setTimeout(
-      function() {
+      function () {
         this.setState({
           fighterPokemon,
           userPokemonAttacks,
           formData: {
-            current_health: userHealth
+            current_health: userHealth,
           },
-          battle: false
+          battle: false,
         });
       }.bind(this),
       500
@@ -465,7 +467,7 @@ class Battle extends Component {
           <>
             {this.state.evolve ? (
               <Evolution
-                saySomething={e => this.props.saySomething(e)}
+                saySomething={(e) => this.props.saySomething(e)}
                 pokemon={this.state.fighterPokemon}
               />
             ) : (

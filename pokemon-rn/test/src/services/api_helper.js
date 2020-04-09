@@ -1,10 +1,10 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:3001"
+  baseURL: "http://localhost:3001",
 });
 
-export const loginUser = async loginData => {
+export const loginUser = async (loginData) => {
   const resp = await api.post("/users/login", loginData);
   localStorage.setItem("authToken", resp.data.token);
   api.defaults.headers.common.authorization = `Bearer ${resp.data.token}`;
@@ -16,7 +16,7 @@ export const loginUser = async loginData => {
   return resp.data.user;
 };
 
-export const registerUser = async registerData => {
+export const registerUser = async (registerData) => {
   const resp = await api.post("/users/register", registerData);
   console.log(resp.data.token);
   localStorage.setItem("authToken", resp.data.token);
@@ -62,7 +62,7 @@ export const getAllPokemon = async () => {
   return resp.data.pokemons;
 };
 
-export const storePokemon = async postData => {
+export const storePokemon = async (postData) => {
   let pokemon = await api.post("/pokemons", postData);
   console.log(pokemon);
   console.log("pokemon stored");
@@ -75,13 +75,13 @@ export const trainerPokemon = async () => {
   return resp.data.pokemons;
 };
 
-export const getMoves = async id => {
+export const getMoves = async (id) => {
   let resp = await api.get(`/pokemons/${id}/moves`);
   console.log(resp);
   return resp.data.moves;
 };
 
-export const ownedPokemon = async id => {
+export const ownedPokemon = async (id) => {
   let resp = await api.get(`/pokemons/trainer/${id}`);
   return resp;
 };
@@ -92,7 +92,7 @@ export const addMoves = async (id, moveData) => {
   return resp;
 };
 
-export const getPokemon = async id => {
+export const getPokemon = async (id) => {
   const resp = await api.get(`/pokemons/${id}`);
   return resp.data.pokemon;
 };
@@ -102,7 +102,7 @@ export const update = async (id, postData) => {
   return;
 };
 
-export const remove = async id => {
+export const remove = async (id) => {
   const resp = await api.delete(`/pokemons/${id}`);
   return;
 };
